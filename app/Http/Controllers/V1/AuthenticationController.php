@@ -17,7 +17,7 @@ class AuthenticationController extends Controller
         $user = User::create($this->hashCredentialsPassword($credentials)->all());
 
         /** @var string $token */
-        $token = auth()->login($user);
+        $token = auth()->login($user); // @phpstan-ignore-line
 
         return $this->current()->additional([
             'meta' => $this->withToken($token),
