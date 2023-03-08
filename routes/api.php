@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -10,3 +12,4 @@
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+
