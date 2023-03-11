@@ -19,7 +19,7 @@ class AuthenticationController extends Controller
         $user = User::create($this->hashCredentialsPassword($credentials)->all());
 
         /** @var string $token */
-        $token = auth()->login($user); // @phpstan-ignore-line
+        $token = auth()->login($user);
 
         return $this->current()->additional([
             'meta' => $this->withToken($token),
@@ -31,13 +31,13 @@ class AuthenticationController extends Controller
         $credentials = $request->validated();
 
         abort_if(
-            !$token = auth()->attempt($credentials->all()),
+            ! $token = auth()->attempt($credentials->all()),
             Response::HTTP_UNAUTHORIZED,
             __('auth.failed'),
         );
 
         return $this->current()->additional([
-            'meta' => $this->withToken($token)
+            'meta' => $this->withToken($token),
         ]);
     }
 

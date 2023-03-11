@@ -58,4 +58,22 @@ class AuthenticationTest extends TestCase
                     ->etc()
             );
     }
+
+    public function test_user_can_login(): void
+    {
+        $requestUser = [
+            'name' => 'Alan Turing',
+            'email' => 'turing@gmail.com',
+            'password' => 'password',
+        ];
+
+        $this->postJson(route('auth.register'), $requestUser);
+
+        $this->postJson(route('auth.login'), [
+            'email' => $requestUser['email'],
+            'password' => $requestUser['password'],
+        ]);
+
+        $this->assertAuthenticated();
+    }
 }

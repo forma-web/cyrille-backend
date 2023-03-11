@@ -8,4 +8,6 @@ Route::controller(AuthenticationController::class)
     ->as('auth.')
     ->group(function () {
         Route::post('register', 'register')->name('register');
+        Route::post('login', 'login')->name('login');
+        Route::get('current', 'current')->name('current');
     });
