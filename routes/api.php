@@ -9,5 +9,11 @@ Route::controller(AuthenticationController::class)
     ->group(function () {
         Route::post('register', 'register')->name('register');
         Route::post('login', 'login')->name('login');
-        Route::get('current', 'current')->name('current');
+    });
+
+Route::middleware('auth')
+    ->group(function () {
+        Route::prefix('user')->as('user.')->group(function () {
+            Route::get('', [AuthenticationController::class, 'current'])->name('current');
+        });
     });
