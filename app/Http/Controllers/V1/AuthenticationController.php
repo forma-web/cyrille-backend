@@ -31,7 +31,7 @@ class AuthenticationController extends Controller
         $credentials = $request->validated();
 
         /** @var string|null $token */
-        $token = auth()->attempt($credentials->all()); // @phpstan-ignore-line
+        $token = auth()->attempt($credentials->all());
 
         abort_if(
             ! $token,
