@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers\V1;
 
+use App\Http\Requests\V1\UserLoginRequest;
 use App\Http\Requests\V1\UserRegisterRequest;
 use App\Http\Resources\V1\UserResource;
 use App\Models\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
+use Symfony\Component\HttpFoundation\Response;
 
 class AuthenticationController extends Controller
 {
-    public function register(UserRegisterRequest $request)
+    public function register(UserRegisterRequest $request): UserResource
     {
         $credentials = $request->validated();
 
@@ -21,6 +23,21 @@ class AuthenticationController extends Controller
 
         return $this->current()->additional([
             'meta' => $this->withToken($token),
+        ]);
+    }
+
+    public function login(UserLoginRequest $request): UserResource
+    {
+        $credentials = $request->validated();
+
+        abort_if(
+            !$token = auth()->attempt($credentials->all()),
+            Response::HTTP_UNAUTHORIZED,
+            __('auth.failed'),
+        );
+
+        return $this->current()->additional([
+            'meta' => $this->withToken($token)
         ]);
     }
 
