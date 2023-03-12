@@ -2,8 +2,9 @@ name: Deploy to playground
 
 on:
   push:
-    tags: v*
-  workflow_dispatch: { }
+    branches:
+      - master
+      - main
 
 env:
   REGISTRY: docker.io
@@ -65,7 +66,9 @@ jobs:
     needs:
       - code-style
       - static-analysis
-    environment: playground
+    environment:
+        name: playground
+        url: https://cyrille.forma-web.ru
     concurrency: playground
 
     steps:
