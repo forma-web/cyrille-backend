@@ -6,7 +6,7 @@ WORKDIR /deps
 COPY composer.json .
 COPY composer.lock .
 
-RUN composer install --optimize-autoloader --no-interaction --no-scripts
+RUN composer install --optimize-autoloader --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
 
 # Stage 2. Server configuration
 FROM nginx/unit:1.29.1-php8.1
