@@ -63,7 +63,8 @@ jobs:
   build-artifact:
     runs-on: ubuntu-latest
     needs:
-      - feature-tests
+      - code-style
+      - static-analysis
     environment: playground
     concurrency: playground
 
