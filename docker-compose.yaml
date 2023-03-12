@@ -1,0 +1,52 @@
+version: '3'
+
+# unit status - curl --unix-socket /var/run/control.unit.sock http://localhost/status
+
+services:
+  app:
+    container_name: app
+    build:
+      dockerfile: build/unit/Dockerfile
+      context: .
+    volumes:
+      - './:/app'
+      - './build/unit/config.json:/docker-entrypoint.d/config.json'
+    ports:
+      - '8080:8080'
+    networks:
+      - cyrille_net
+    depends_on:
+      pgsql:
+        condition: service_healthy
+  pgsql:
+    image: 'postgres:15'
+    ports:
+      - '${FORWARD_DB_PORT:-5432}:5432'
+    environment:
+      PGPASSWORD: '${DB_PASSWORD:-secret}'
+      POSTGRES_DB: '${DB_DATABASE}'
+      POSTGRES_USER: '${DB_USERNAME}'
+      POSTGRES_PASSWORD: '${DB_PASSWORD:-secret}'
+    volumes:
+      - 'cyrille_pgsql:/var/lib/postgresql/data'
+      - './build/postgres/create-testing-database.sql:/docker-entrypoint-initdb.d/10-create-testing-database.sql'
+    networks:
+      - cyrille_net
+    healthcheck:
+      test:
+        - CMD
+        - pg_isready
+        - '-q'
+        - '-d'
+        - '${DB_DATABASE}'
+        - '-U'
+        - '${DB_USERNAME}'
+      retries: 3
+      timeout: 5s
+
+networks:
+  cyrille_net:
+    driver: bridge
+volumes:
+  cyrille_pgsql:
+    driver: local
