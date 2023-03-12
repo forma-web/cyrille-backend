@@ -68,7 +68,7 @@ jobs:
       - static-analysis
     environment:
         name: playground
-        url: https://cyrille.forma-web.ru
+        url: https://forma-web.ru
     concurrency: playground
 
     steps:
