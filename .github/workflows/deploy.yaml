@@ -71,7 +71,7 @@ jobs:
 
       - name: Run feature tests
         run: |
-          docker-compose exec php artisan test
+          docker-compose exec app php artisan test --testsuite=Feature
 
   build-artifact:
     runs-on: ubuntu-latest
