@@ -1,0 +1,94 @@
+name: Deploy to playground
+
+on:
+  push:
+    branches: master
+    tags: v*
+  workflow_dispatch: { }
+
+jobs:
+  code-style:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Validate composer.json and composer.lock
+        run: composer validate --strict
+
+      - name: Cache Composer packages
+        id: composer-cache
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Run Pint
+        run: |
+          vendor/bin/pint -v --test
+
+  static-analysis:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Validate composer.json and composer.lock
+        run: composer validate --strict
+
+      - name: Cache Composer packages
+        id: composer-cache
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Run PHPStan
+        run: |
+          vendor/bin/phpstan analyze
+
+  feature-tests:
+    runs-on: ubuntu-latest
+    needs:
+      - code-style
+      - static-analysis
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run environment
+        run: |
+          docker-compose up -d --build
+
+      - name: Run feature tests
+        run: |
+          docker-compose exec php artisan test --testsuite=Feature
+
+  build-artifact:
+    runs-on: ubuntu-latest
+    needs:
+      - feature-tests
+    environment: playground
+    concurrency: playground
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build image
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/cyrille-backend:${{ github.ref_name }} -f build/unit/Dockerfile
+
+      - name: Push image
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker push ${{ secrets.DOCKER_USERNAME }}/cyrille-backend:${{ github.ref_name }}
