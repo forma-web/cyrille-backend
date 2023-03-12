@@ -2,7 +2,6 @@ name: Deploy to playground
 
 on:
   push:
-    branches: master
     tags: v*
   workflow_dispatch: { }
 
@@ -72,7 +71,7 @@ jobs:
 
       - name: Run feature tests
         run: |
-          docker-compose exec php artisan test --testsuite=Feature
+          docker-compose exec php artisan test
 
   build-artifact:
     runs-on: ubuntu-latest
