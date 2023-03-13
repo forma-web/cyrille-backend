@@ -6,9 +6,12 @@ use App\Http\Requests\V1\UserLoginRequest;
 use App\Http\Requests\V1\UserRegisterRequest;
 use App\Http\Resources\V1\UserResource;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
+
 
 class AuthenticationController extends Controller
 {
@@ -35,11 +38,28 @@ class AuthenticationController extends Controller
 
         abort_if(
             ! $token,
-            Response::HTTP_UNAUTHORIZED,
+            SymfonyResponse::HTTP_UNAUTHORIZED,
             __('auth.failed'),
         );
 
         return $this->current()->additional([
+            'meta' => $this->withToken($token),
+        ]);
+    }
+
+    public function logout(): Response
+    {
+        auth()->logout();
+
+        return response()->noContent();
+    }
+
+    public function refresh(): JsonResponse
+    {
+        /** @var string $token */
+        $token = auth()->refresh(true, true); // @phpstan-ignore-line
+
+        return response()->json([
             'meta' => $this->withToken($token),
         ]);
     }
