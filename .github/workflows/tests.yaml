@@ -3,6 +3,7 @@ name: Run code checking
 on:
   push:
     branches:
+      - '*'
       - '!master'
       - '!main'
 

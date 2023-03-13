@@ -28,6 +28,8 @@ class User extends Authenticatable implements JWTSubject
      * @var array<int, string>
      */
     protected $hidden = [
+        'created_at',
+        'updated_at',
         'password',
     ];
 
@@ -36,9 +38,7 @@ class User extends Authenticatable implements JWTSubject
      *
      * @var array<string, string>
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+    protected $casts = [];
 
     public function getJWTIdentifier(): string
     {
