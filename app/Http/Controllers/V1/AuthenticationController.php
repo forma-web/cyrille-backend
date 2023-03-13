@@ -12,7 +12,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
-
 class AuthenticationController extends Controller
 {
     public function register(UserRegisterRequest $request): UserResource
