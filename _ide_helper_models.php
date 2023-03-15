@@ -12,6 +12,18 @@
 
 namespace App\Models{
 /**
+ * App\Models\Book
+ *
+ * @method static \Database\Factories\BookFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|Book newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Book newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Book query()
+ */
+	class Book extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\User
  *
  * @property int $id
