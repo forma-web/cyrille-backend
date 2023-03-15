@@ -20,7 +20,7 @@ class BookFactory extends Factory
             'name' => fake()->words(3, true),
             'description' => fake()->paragraphs(1, true),
             'thumbnail_image' => $this->fakeThumbnail(),
-            'thumbnail_component' => fake()->randomElement(['SherlockAnimation', 'HarryPotterAnimation', null]),
+            'thumbnail_component' => fake()->optional()->randomElement(['SherlockAnimation', 'HarryPotterAnimation']),
             'genre' => fake()->randomElement(['biography', 'poetry', 'drama', 'science', 'history']),
             'release_date' => fake()->dateTimeBetween('-10 years'),
         ];

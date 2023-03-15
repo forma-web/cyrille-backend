@@ -12,12 +12,79 @@
 
 namespace App\Models{
 /**
+ * App\Models\Artist
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $avatar
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Database\Factories\ArtistFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|Artist newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Artist newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Artist query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Artist whereAvatar($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Artist whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Artist whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Artist whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Artist whereUpdatedAt($value)
+ */
+	class Artist extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\ArtistBook
+ *
+ * @property int $id
+ * @property int $artist_id
+ * @property int $book_id
+ * @property string $role
+ * @property string|null $notes
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|ArtistBook newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ArtistBook newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ArtistBook query()
+ * @method static \Illuminate\Database\Eloquent\Builder|ArtistBook whereArtistId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ArtistBook whereBookId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ArtistBook whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ArtistBook whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ArtistBook whereNotes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ArtistBook whereRole($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ArtistBook whereUpdatedAt($value)
+ */
+	class ArtistBook extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\Book
  *
+ * @property int $id
+ * @property string $name
+ * @property string $description
+ * @property string $thumbnail_image
+ * @property string|null $thumbnail_component
+ * @property string|null $genre
+ * @property \Illuminate\Support\Carbon $release_date
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Artist> $artists
+ * @property-read int|null $artists_count
  * @method static \Database\Factories\BookFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Book newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Book newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Book query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Book whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Book whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Book whereGenre($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Book whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Book whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Book whereReleaseDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Book whereThumbnailComponent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Book whereThumbnailImage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Book whereUpdatedAt($value)
  */
 	class Book extends \Eloquent {}
 }

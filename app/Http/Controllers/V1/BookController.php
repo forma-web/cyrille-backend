@@ -28,7 +28,7 @@ class BookController extends Controller
      */
     public function show(int $id): Book
     {
-        return Book::findOrFail($id);
+        return Book::with('artists')->findOrFail($id);
     }
 
     /**
