@@ -25,5 +25,5 @@ Route::controller(BookController::class)
     ->as('books.')
     ->group(function () {
         Route::get('', 'index')->name('index');
-        Route::get('{id}', 'show')->name('show');
+        Route::get('{book}', 'show')->name('show');
     });
