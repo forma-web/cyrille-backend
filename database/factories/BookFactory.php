@@ -19,6 +19,7 @@ class BookFactory extends Factory
         return [
             'name' => fake()->words(3, true),
             'description' => fake()->paragraphs(1, true),
+            'language' => 'en', // ISO 639-1
             'thumbnail_image' => $this->fakeThumbnail(),
             'thumbnail_component' => fake()->optional()->randomElement(['SherlockAnimation', 'HarryPotterAnimation']),
             'genre' => fake()->randomElement(['biography', 'poetry', 'drama', 'science', 'history']),
