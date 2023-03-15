@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('description');
-            $table->jsonb('thumbnail');
+            $table->string('thumbnail_image');
+            $table->string('thumbnail_component')->nullable();
             $table->string('genre')->nullable();
             $table->date('release_date');
             $table->timestamps();

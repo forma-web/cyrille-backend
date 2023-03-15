@@ -19,12 +19,15 @@ class BookFactory extends Factory
         return [
             'name' => fake()->words(3, true),
             'description' => fake()->paragraphs(1, true),
-            'thumbnail' => json_encode([
-                'type' => 'image',
-                'url' => 'https://random.imagecdn.app/640/480',
-            ]),
+            'thumbnail_image' => $this->fakeThumbnail(),
+            'thumbnail_component' => fake()->randomElement(['SherlockAnimation', 'HarryPotterAnimation', null]),
             'genre' => fake()->randomElement(['biography', 'poetry', 'drama', 'science', 'history']),
             'release_date' => fake()->dateTimeBetween('-10 years'),
         ];
+    }
+
+    public function fakeThumbnail(): string
+    {
+        return 'https://random.imagecdn.app/640/480';
     }
 }
