@@ -14,5 +14,18 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    $routes = [];
+
+    foreach (Route::getRoutes()->getRoutes() as $route)
+    {
+        if (Str::contains($route->uri, 'api'))
+            $routes[Str::before($route->getName(), '.')][] = [
+                'uri' => $route->uri,
+                'methods' => $route->methods[0],
+            ];
+    }
+
+    return view('welcome', [
+        'routes' => $routes,
+    ]);
 });
