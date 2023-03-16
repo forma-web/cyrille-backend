@@ -16,13 +16,13 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     $routes = [];
 
-    foreach (Route::getRoutes()->getRoutes() as $route)
-    {
-        if (Str::contains($route->uri, 'api'))
+    foreach (Route::getRoutes()->getRoutes() as $route) {
+        if (Str::contains($route->uri, 'api')) {
             $routes[Str::before($route->getName(), '.')][] = [
                 'uri' => $route->uri,
                 'methods' => $route->methods[0],
             ];
+        }
     }
 
     return view('welcome', [
