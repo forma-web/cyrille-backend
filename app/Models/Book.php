@@ -21,6 +21,7 @@ class Book extends Model
         'description',
         'language',
         'genre',
+        'pages',
         'release_date',
     ];
 
