@@ -34,7 +34,7 @@ class BookController extends Controller
         return new BookResource(
             Book::withAvg('reviews', 'rating')
                 ->withCount('reviews')
-                ->with('artists')
+                ->with('authors', 'artists')
                 ->findOrFail($id)
         );
     }
