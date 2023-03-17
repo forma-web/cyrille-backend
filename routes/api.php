@@ -5,7 +5,6 @@ use App\Http\Controllers\V1\BookController;
 use App\Http\Controllers\V1\ReviewController;
 use Illuminate\Support\Facades\Route;
 
-// TODO: authors
 // TODO: book rating
 
 Route::controller(AuthenticationController::class)

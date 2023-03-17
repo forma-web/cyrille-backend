@@ -52,8 +52,19 @@ class Book extends Model
         return $this
             ->belongsToMany(Artist::class, ArtistBook::class)
             ->withPivot('role', 'notes')
-            ->withTimestamps()
+            ->orderByPivot('role')
             ->as('project');
+    }
+
+    /**
+     * The authors that belong to the book.
+     */
+    public function authors(): BelongsToMany
+    {
+        return $this
+            ->belongsToMany(Artist::class, ArtistBook::class)
+            ->wherePivot('role', 'author')
+            ->as('authors');
     }
 
     /**

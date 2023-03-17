@@ -24,6 +24,7 @@ class Artist extends Model
      * @var array<int, string>
      */
     protected $hidden = [
+        'authors',
         'created_at',
         'updated_at',
     ];

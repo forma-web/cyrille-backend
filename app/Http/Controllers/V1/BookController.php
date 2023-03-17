@@ -13,8 +13,9 @@ class BookController extends Controller
      */
     public function index(): AnonymousResourceCollection
     {
-        // TODO: Resource response
-        return BookResource::collection(Book::cursorPaginate());
+        return BookResource::collection(
+            Book::with('authors')->cursorPaginate()
+        );
     }
 
     /**
