@@ -27,7 +27,7 @@ class ReviewController extends Controller
 
         $review->put('user_id', auth()->id());
 
-        Book::findOrFail($bookId)
+        return Book::findOrFail($bookId)
             ->reviews()
             ->create($review->all());
     }

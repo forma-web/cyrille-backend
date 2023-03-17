@@ -13,10 +13,10 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         \App\Models\User::factory(10)->create();
-        \App\Models\Review::factory(10)->create();
 
         $this->call([
             BookSeeder::class,
+            ReviewSeeder::class,
         ]);
     }
 }
