@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\V1\AuthenticationController;
 use App\Http\Controllers\V1\BookController;
+use App\Http\Controllers\V1\ReviewController;
 use Illuminate\Support\Facades\Route;
 
 Route::controller(AuthenticationController::class)
@@ -26,4 +27,15 @@ Route::controller(BookController::class)
     ->group(function () {
         Route::get('', 'index')->name('index');
         Route::get('{book}', 'show')->name('show');
+
+        Route::controller(ReviewController::class)
+            ->prefix('{book}/reviews')
+            ->as('reviews.')
+            ->group(function () {
+                Route::get('', 'index')->name('index');
+
+                Route::middleware('auth')->group(function () {
+                    Route::post('', 'store')->name('store');
+                });
+            });
     });

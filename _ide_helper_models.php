@@ -64,6 +64,7 @@ namespace App\Models{
  * @property int $id
  * @property string $name
  * @property string $description
+ * @property string $language
  * @property string $thumbnail_image
  * @property string|null $thumbnail_component
  * @property string|null $genre
@@ -72,6 +73,8 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Artist> $artists
  * @property-read int|null $artists_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Review> $reviews
+ * @property-read int|null $reviews_count
  * @method static \Database\Factories\BookFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Book newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Book newQuery()
@@ -80,6 +83,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Book whereDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Book whereGenre($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Book whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Book whereLanguage($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Book whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Book whereReleaseDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Book whereThumbnailComponent($value)
@@ -87,6 +91,33 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Book whereUpdatedAt($value)
  */
 	class Book extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\Review
+ *
+ * @property int $id
+ * @property int $book_id
+ * @property int $user_id
+ * @property int $rating
+ * @property string|null $comment
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\User $user
+ * @method static \Database\Factories\ReviewFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|Review newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Review newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Review query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Review whereBookId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Review whereComment($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Review whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Review whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Review whereRating($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Review whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Review whereUserId($value)
+ */
+	class Review extends \Eloquent {}
 }
 
 namespace App\Models{
