@@ -71,6 +71,13 @@ class BooksTest extends TestCase
                     'release_date',
                     'reviews_avg_rating',
                     'reviews_count',
+                    'authors' => [
+                        '*' => [
+                            'id',
+                            'name',
+                            'avatar',
+                        ],
+                    ],
                     'artists' => [
                         '*' => [
                             'id',
