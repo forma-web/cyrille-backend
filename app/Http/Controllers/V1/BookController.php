@@ -12,6 +12,7 @@ class BookController extends Controller
      */
     public function index(): CursorPaginator
     {
+        // TODO: Resource response
         return Book::cursorPaginate();
     }
 
@@ -28,6 +29,7 @@ class BookController extends Controller
      */
     public function show(int $id): Book
     {
+        // TODO: Resource response
         return Book::with('artists')->findOrFail($id);
     }
 
