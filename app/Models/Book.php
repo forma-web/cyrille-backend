@@ -70,14 +70,6 @@ class Book extends Model
     }
 
     /**
-     * Book rating.
-     */
-    public function rating(): float
-    {
-        return $this->reviews()->avg('rating');
-    }
-
-    /**
      * The reviews that belong to the book.
      */
     public function reviews(): HasMany
