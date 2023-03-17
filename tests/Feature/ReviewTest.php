@@ -59,8 +59,8 @@ class ReviewTest extends TestCase
             ->assertStatus(201)
             ->assertJson(
                 fn (AssertableJson $json) => $json
-                    ->where('rating', 5)
-                    ->where('comment', 'Test comment')
+                    ->where('data.rating', 5)
+                    ->where('data.comment', 'Test comment')
                     ->etc()
             );
     }
