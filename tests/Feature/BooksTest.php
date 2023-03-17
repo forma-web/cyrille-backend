@@ -34,6 +34,13 @@ class BooksTest extends TestCase
                         'pages',
                         'published',
                         'release_date',
+                        'authors' => [
+                            '*' => [
+                                'id',
+                                'name',
+                                'avatar',
+                            ],
+                        ],
                     ],
                 ],
             ]);
@@ -48,7 +55,35 @@ class BooksTest extends TestCase
 
         $response = $this->getJson(route('books.show', 11));
 
-        $response->assertStatus(200);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'name',
+                    'description',
+                    'language',
+                    'thumbnail_image',
+                    'thumbnail_component',
+                    'genre',
+                    'pages',
+                    'published',
+                    'release_date',
+                    'reviews_avg_rating',
+                    'reviews_count',
+                    'artists' => [
+                        '*' => [
+                            'id',
+                            'name',
+                            'avatar',
+                            'project' => [
+                                'role',
+                                'notes',
+                            ],
+                        ],
+                    ],
+                ],
+            ]);
     }
 
     /**
