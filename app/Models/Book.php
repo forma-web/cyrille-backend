@@ -42,6 +42,8 @@ class Book extends Model
      */
     protected $casts = [
         'release_date' => 'date',
+        'reviews_avg_rating' => 'float',
+        'reviews_count' => 'integer',
     ];
 
     /**
@@ -65,6 +67,14 @@ class Book extends Model
             ->belongsToMany(Artist::class, ArtistBook::class)
             ->wherePivot('role', 'author')
             ->as('authors');
+    }
+
+    /**
+     * Book rating.
+     */
+    public function rating(): float
+    {
+        return $this->reviews()->avg('rating');
     }
 
     /**

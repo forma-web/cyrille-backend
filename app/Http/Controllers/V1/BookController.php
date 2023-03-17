@@ -32,7 +32,10 @@ class BookController extends Controller
     public function show(int $id): BookResource
     {
         return new BookResource(
-            Book::with('artists')->findOrFail($id)
+            Book::withAvg('reviews', 'rating')
+                ->withCount('reviews')
+                ->with('authors')
+                ->findOrFail($id)
         );
     }
 
