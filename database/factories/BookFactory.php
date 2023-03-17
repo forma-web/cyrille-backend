@@ -22,6 +22,7 @@ class BookFactory extends Factory
             'language' => 'en', // ISO 639-1
             'thumbnail_image' => $this->fakeThumbnail(),
             'thumbnail_component' => fake()->optional()->randomElement(['SherlockAnimation', 'HarryPotterAnimation']),
+            'pages' => fake()->numberBetween(100, 1000),
             'genre' => fake()->randomElement(['biography', 'poetry', 'drama', 'science', 'history']),
             'release_date' => fake()->dateTimeBetween('-10 years'),
         ];

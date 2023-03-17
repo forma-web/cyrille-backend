@@ -15,10 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('description');
-            $table->string('language', 100);
+            $table->string('language', 50);
             $table->string('thumbnail_image');
             $table->string('thumbnail_component')->nullable();
             $table->string('genre')->nullable();
+            $table->unsignedSmallInteger('pages');
+            $table->boolean('published')->default(false);
             $table->date('release_date');
             $table->timestamps();
         });

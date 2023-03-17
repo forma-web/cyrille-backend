@@ -19,7 +19,24 @@ class BooksTest extends TestCase
 
         $response = $this->getJson(route('books.index'));
 
-        $response->assertStatus(200);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                'data' => [
+                    '*' => [
+                        'id',
+                        'name',
+                        'description',
+                        'language',
+                        'thumbnail_image',
+                        'thumbnail_component',
+                        'genre',
+                        'pages',
+                        'published',
+                        'release_date',
+                    ],
+                ],
+            ]);
     }
 
     /**

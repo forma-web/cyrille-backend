@@ -2,18 +2,20 @@
 
 namespace App\Http\Controllers\V1;
 
+use App\Http\Resources\V1\BookResource;
 use App\Models\Book;
-use Illuminate\Contracts\Pagination\CursorPaginator;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class BookController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(): CursorPaginator
+    public function index(): AnonymousResourceCollection
     {
-        // TODO: Resource response
-        return Book::cursorPaginate();
+        return BookResource::collection(
+            Book::with('authors')->cursorPaginate()
+        );
     }
 
     /**
@@ -27,10 +29,14 @@ class BookController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(int $id): Book
+    public function show(int $id): BookResource
     {
-        // TODO: Resource response
-        return Book::with('artists')->findOrFail($id);
+        return new BookResource(
+            Book::withAvg('reviews', 'rating')
+                ->withCount('reviews')
+                ->with('authors')
+                ->findOrFail($id)
+        );
     }
 
     /**

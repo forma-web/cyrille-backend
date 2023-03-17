@@ -5,6 +5,8 @@ use App\Http\Controllers\V1\BookController;
 use App\Http\Controllers\V1\ReviewController;
 use Illuminate\Support\Facades\Route;
 
+// TODO: book rating
+
 Route::controller(AuthenticationController::class)
     ->prefix('auth')
     ->as('auth.')

@@ -21,6 +21,7 @@ class Book extends Model
         'description',
         'language',
         'genre',
+        'pages',
         'release_date',
     ];
 
@@ -41,6 +42,8 @@ class Book extends Model
      */
     protected $casts = [
         'release_date' => 'date',
+        'reviews_avg_rating' => 'float',
+        'reviews_count' => 'integer',
     ];
 
     /**
@@ -51,8 +54,27 @@ class Book extends Model
         return $this
             ->belongsToMany(Artist::class, ArtistBook::class)
             ->withPivot('role', 'notes')
-            ->withTimestamps()
+            ->orderByPivot('role')
             ->as('project');
+    }
+
+    /**
+     * The authors that belong to the book.
+     */
+    public function authors(): BelongsToMany
+    {
+        return $this
+            ->belongsToMany(Artist::class, ArtistBook::class)
+            ->wherePivot('role', 'author')
+            ->as('authors');
+    }
+
+    /**
+     * Book rating.
+     */
+    public function rating(): float
+    {
+        return $this->reviews()->avg('rating');
     }
 
     /**

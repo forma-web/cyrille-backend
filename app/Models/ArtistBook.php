@@ -35,8 +35,6 @@ class ArtistBook extends Pivot
     protected $hidden = [
         'artist_id',
         'book_id',
-        'created_at',
-        'updated_at',
     ];
 
     /**
