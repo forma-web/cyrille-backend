@@ -17,6 +17,8 @@ class ReviewController extends Controller
         return ReviewResource::collection(
             Book::findOrFail($bookId)
                 ->reviews()
+                ->orderBy('id', 'desc')
+                ->latest()
                 ->with('user:id,name,avatar')
                 ->cursorPaginate()
         );

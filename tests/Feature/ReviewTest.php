@@ -66,13 +66,38 @@ class ReviewTest extends TestCase
     }
 
     /**
+     * User can send a review only with rating.
+     */
+    public function test_user_can_send_a_review_only_with_rating(): void
+    {
+        $this->seed(ReviewSeeder::class);
+
+        $user = User::factory()->create();
+
+        $this->actingAs($user);
+
+        $response = $this->postJson(route('books.reviews.store', 70), [
+            'rating' => 5,
+        ]);
+
+        $response
+            ->assertStatus(201)
+            ->assertJson(
+                fn (AssertableJson $json) => $json
+                    ->where('data.rating', 5)
+                    ->missing('data.comment')
+                    ->etc()
+            );
+    }
+
+    /**
      * Unauthenticated user can't send a review.
      */
     public function test_unauthenticated_user_cant_send_a_review(): void
     {
         $this->seed(ReviewSeeder::class);
 
-        $response = $this->postJson(route('books.reviews.store', 70), [
+        $response = $this->postJson(route('books.reviews.store', 90), [
             'rating' => 5,
             'comment' => 'Test comment',
         ]);
