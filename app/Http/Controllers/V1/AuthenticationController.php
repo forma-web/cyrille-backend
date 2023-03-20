@@ -53,6 +53,9 @@ class AuthenticationController extends Controller
         return response()->noContent();
     }
 
+    /**
+     * @return JsonResponse
+     */
     public function refresh(): JsonResponse
     {
         /** @var string $token */
