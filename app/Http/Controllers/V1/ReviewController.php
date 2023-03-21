@@ -9,6 +9,8 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class ReviewController extends Controller
 {
+    private const REVIEWS_PER_PAGE = 5;
+
     /**
      * Display a listing of the resource.
      */
@@ -20,7 +22,7 @@ class ReviewController extends Controller
                 ->orderBy('id', 'desc')
                 ->latest()
                 ->with('user:id,name,avatar')
-                ->cursorPaginate()
+                ->cursorPaginate(self::REVIEWS_PER_PAGE)
         );
     }
 
