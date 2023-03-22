@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\V1\AuthenticationController;
 use App\Http\Controllers\V1\BookController;
+use App\Http\Controllers\V1\ChapterController;
 use App\Http\Controllers\V1\ReviewController;
 use Illuminate\Support\Facades\Route;
 
@@ -14,12 +15,6 @@ Route::controller(AuthenticationController::class)
         Route::post('logout', 'logout')->name('logout');
         Route::post('refresh', 'refresh')->name('refresh');
     });
-
-Route::middleware('auth')->group(function () {
-    Route::prefix('user')->as('user.')->group(function () {
-        Route::get('', [AuthenticationController::class, 'current'])->name('current');
-    });
-});
 
 Route::controller(BookController::class)
     ->prefix('books')
@@ -38,4 +33,20 @@ Route::controller(BookController::class)
                     Route::post('', 'store')->name('store');
                 });
             });
+
+        Route::controller(ChapterController::class)
+            ->prefix('{book}/chapters')
+            ->as('chapters.')
+            ->group(function () {
+                Route::get('{chapter}', 'show')->name('show');
+            });
+    });
+
+Route::controller(AuthenticationController::class)
+    ->prefix('user')
+    ->as('user.')
+    ->group(function () {
+        Route::middleware('auth')->group(function () {
+            Route::get('', 'current')->name('current');
+        });
     });
