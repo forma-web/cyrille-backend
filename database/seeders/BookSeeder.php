@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Artist;
 use App\Models\Book;
+use App\Models\Chapter;
 use Illuminate\Database\Seeder;
 
 class BookSeeder extends Seeder
@@ -22,6 +23,7 @@ class BookSeeder extends Seeder
                     'notes' => fake()->sentence(),
                 ],
             )
+            ->has(Chapter::factory()->count(4))
             ->create();
     }
 }
