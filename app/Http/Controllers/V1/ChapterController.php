@@ -2,17 +2,20 @@
 
 namespace App\Http\Controllers\V1;
 
+use App\Http\Resources\V1\ChapterResource;
 use App\Models\Book;
 
 class ChapterController extends Controller
 {
     public function index(int $bookId)
     {
-        return Book::findOrFail($bookId)
-            ->chapters()
-            ->select('id', 'order')
-            ->orderBy('order')
-            ->get();
+        return ChapterResource::collection(
+            Book::findOrFail($bookId)
+                ->chapters()
+                ->select('id', 'order')
+                ->orderBy('order')
+                ->get()
+        );
     }
 
     /**
@@ -28,9 +31,11 @@ class ChapterController extends Controller
      */
     public function show(int $bookId, int $chapterId)
     {
-        return Book::findOrFail($bookId)
-            ->chapters()
-            ->findOrFail($chapterId);
+        return new ChapterResource(
+            Book::findOrFail($bookId)
+                ->chapters()
+                ->findOrFail($chapterId)
+        );
     }
 
     /**
