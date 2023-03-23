@@ -6,6 +6,15 @@ use App\Models\Book;
 
 class ChapterController extends Controller
 {
+    public function index(int $bookId)
+    {
+        return Book::findOrFail($bookId)
+            ->chapters()
+            ->select('id', 'order')
+            ->orderBy('order')
+            ->get();
+    }
+
     /**
      * Store a newly created resource in storage.
      */

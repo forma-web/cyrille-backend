@@ -38,6 +38,7 @@ Route::controller(BookController::class)
             ->prefix('{book}/chapters')
             ->as('chapters.')
             ->group(function () {
+                Route::get('', 'index')->name('index');
                 Route::get('{chapter}', 'show')->name('show');
             });
     });
