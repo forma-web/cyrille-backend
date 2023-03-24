@@ -76,4 +76,9 @@ class Book extends Model
     {
         return $this->hasMany(Review::class);
     }
+
+    public function chapters(): HasMany
+    {
+        return $this->hasMany(Chapter::class);
+    }
 }
