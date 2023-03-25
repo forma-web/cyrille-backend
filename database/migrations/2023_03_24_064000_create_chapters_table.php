@@ -21,6 +21,7 @@ return new class extends Migration
             $table->unsignedInteger('order');
             $table->string('name')->nullable();
             $table->text('content');
+            $table->unsignedInteger('content_length');
             $table->string('language');
             $table->timestamps();
 
