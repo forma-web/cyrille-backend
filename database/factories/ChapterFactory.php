@@ -16,10 +16,14 @@ class ChapterFactory extends Factory
      */
     public function definition(): array
     {
+        $content = fake()->randomHtml();
+        $content_length = strlen(strip_tags($content));
+
         return [
             'order' => fake()->unique()->numberBetween(1, 100),
             'name' => fake()->sentence(),
-            'content' => fake()->paragraphs(10, true),
+            'content' => $content,
+            'content_length' => $content_length,
             'language' => 'en',
         ];
     }

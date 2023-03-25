@@ -39,5 +39,6 @@ class Chapter extends Model
      */
     protected $casts = [
         'order' => 'integer',
+        'content_length' => 'integer',
     ];
 }
