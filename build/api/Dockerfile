@@ -63,6 +63,7 @@ RUN apt-get update && \
 
 RUN php artisan route:cache && \
     php artisan view:cache && \
-    php artisan optimize
+    php artisan optimize && \
+    php artisan config:clear # https://github.com/laravel/framework/issues/14941
 
 EXPOSE 80
