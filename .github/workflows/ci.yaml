@@ -68,19 +68,19 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-#  deploy-to-staging:
-#    name: Deploy to staging
-#    runs-on: ubuntu-latest
-#    needs: build-and-push
-#    environment:
-#      name: staging
-#      url: ${{ env.STAGING_PREVIEW_URL }}
-#    steps:
-#      - name: Connect to server
-#        uses: appleboy/ssh-action@v0.1.8
-#        with:
-#          host: ${{ secrets.STAGING_HOST }}
-#          username: ${{ secrets.STAGING_USERNAME }}
-#          key: ${{ secrets.STAGING_KEY }}
-#          script: |
-#            docker service update cyrille_frontend --image ${{ env.IMAGE_NAME }}
+  deploy-to-staging:
+    name: Deploy to staging
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    environment:
+      name: staging
+      url: ${{ env.STAGING_PREVIEW_URL }}
+    steps:
+      - name: Connect to server
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.STAGING_HOST }}
+          username: ${{ secrets.STAGING_USERNAME }}
+          key: ${{ secrets.STAGING_KEY }}
+          script: |
+            docker service update cyrille_backend --image ${{ env.IMAGE_NAME }}
