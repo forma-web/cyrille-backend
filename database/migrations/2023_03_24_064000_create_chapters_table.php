@@ -15,6 +15,7 @@ return new class extends Migration
         Schema::create('chapters', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Book::class)
+                ->index()
                 ->constrained()
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
