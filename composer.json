@@ -7,7 +7,7 @@
         "book",
         "art"
     ],
-    "license": "MIT",
+    "license": "CC-BY-NC-ND-4.0",
     "require": {
         "php": "^8.1",
         "guzzlehttp/guzzle": "^7.2",
