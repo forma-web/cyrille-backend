@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -77,8 +78,19 @@ class Book extends Model
         return $this->hasMany(Review::class);
     }
 
+    /**
+     * The chapters that belong to the book.
+     */
     public function chapters(): HasMany
     {
         return $this->hasMany(Chapter::class);
+    }
+
+    /**
+     * Scope a query to only include published books.
+     */
+    public function scopeOnlyPublished(Builder $query): Builder
+    {
+        return $query->where('published', true);
     }
 }

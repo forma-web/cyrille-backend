@@ -17,7 +17,8 @@ class ReviewController extends Controller
     public function index(int $bookId): AnonymousResourceCollection
     {
         return ReviewResource::collection(
-            Book::findOrFail($bookId)
+            Book::query()
+                ->findOrFail($bookId)
                 ->reviews()
                 ->orderBy('id', 'desc')
                 ->latest()
@@ -36,7 +37,8 @@ class ReviewController extends Controller
         $review->put('user_id', auth()->id());
 
         return new ReviewResource(
-            Book::findOrFail($bookId)
+            Book::query()
+                ->findOrFail($bookId)
                 ->reviews()
                 ->create($review->all())
         );

@@ -12,7 +12,8 @@ class ChapterController extends Controller
     {
         // TODO: chapter tests
         return ChapterResource::collection(
-            Book::findOrFail($bookId)
+            Book::query()
+                ->findOrFail($bookId)
                 ->chapters()
                 ->select('id', 'order', 'name', 'content_length')
                 ->orderBy('order')
@@ -34,7 +35,8 @@ class ChapterController extends Controller
     public function show(int $bookId, int $chapterId): ChapterResource
     {
         return new ChapterResource(
-            Book::findOrFail($bookId)
+            Book::query()
+                ->findOrFail($bookId)
                 ->chapters()
                 ->findOrFail($chapterId)
         );

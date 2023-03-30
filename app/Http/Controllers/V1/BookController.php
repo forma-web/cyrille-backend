@@ -14,7 +14,9 @@ class BookController extends Controller
     public function index(): AnonymousResourceCollection
     {
         return BookResource::collection(
-            Book::with('authors')->cursorPaginate()
+            Book::query()
+                ->with('authors')
+                ->cursorPaginate()
         );
     }
 
@@ -32,7 +34,8 @@ class BookController extends Controller
     public function show(int $id): BookResource
     {
         return new BookResource(
-            Book::withAvg('reviews', 'rating')
+            Book::query()
+                ->withAvg('reviews', 'rating')
                 ->withCount('reviews')
                 ->with('authors', 'artists')
                 ->findOrFail($id)

@@ -35,6 +35,7 @@ Route::controller(BookController::class)
             });
 
         Route::controller(ChapterController::class)
+            ->middleware('auth')
             ->prefix('{book}/chapters')
             ->as('chapters.')
             ->group(function () {

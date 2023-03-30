@@ -2,13 +2,14 @@
 
 namespace Tests\Feature;
 
+use App\Models\Book;
+use App\Models\Review;
 use App\Models\User;
-use Database\Seeders\ReviewSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 
-class ReviewTest extends TestCase
+class ReviewsTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -17,9 +18,11 @@ class ReviewTest extends TestCase
      */
     public function test_view_all_reviews(): void
     {
-        $this->seed(ReviewSeeder::class);
+        $book = Book::factory()
+            ->has(Review::factory()->count(5))
+            ->create();
 
-        $response = $this->getJson(route('books.reviews.index', 30));
+        $response = $this->getJson(route('books.reviews.index', $book->id));
 
         $response
             ->assertStatus(200)
@@ -44,13 +47,11 @@ class ReviewTest extends TestCase
      */
     public function test_user_can_send_a_review(): void
     {
-        $this->seed(ReviewSeeder::class);
+        $book = Book::factory()->create();
 
-        $user = User::factory()->create();
+        $this->actingAs(User::factory()->create());
 
-        $this->actingAs($user);
-
-        $response = $this->postJson(route('books.reviews.store', 50), [
+        $response = $this->postJson(route('books.reviews.store', $book->id), [
             'rating' => 5,
             'comment' => 'Test comment',
         ]);
@@ -70,13 +71,11 @@ class ReviewTest extends TestCase
      */
     public function test_user_can_send_a_review_only_with_rating(): void
     {
-        $this->seed(ReviewSeeder::class);
+        $book = Book::factory()->create();
 
-        $user = User::factory()->create();
+        $this->actingAs(User::factory()->create());
 
-        $this->actingAs($user);
-
-        $response = $this->postJson(route('books.reviews.store', 70), [
+        $response = $this->postJson(route('books.reviews.store', $book->id), [
             'rating' => 5,
         ]);
 
@@ -95,19 +94,18 @@ class ReviewTest extends TestCase
      */
     public function test_unauthenticated_user_cant_send_a_review(): void
     {
-        $this->seed(ReviewSeeder::class);
+        $book = Book::factory()->create();
 
-        $response = $this->postJson(route('books.reviews.store', 90), [
+        $response = $this->postJson(route('books.reviews.store', $book->id), [
             'rating' => 5,
             'comment' => 'Test comment',
         ]);
 
+        $this->assertGuest();
         $response
             ->assertStatus(401)
-            ->assertJson(
-                fn (AssertableJson $json) => $json
-                    ->has('message')
-                    ->etc()
-            );
+            ->assertJsonStructure([
+                'message',
+            ]);
     }
 }

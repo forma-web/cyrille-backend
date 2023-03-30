@@ -29,7 +29,7 @@ jobs:
         with:
           path: '**/vendor'
           key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
-      - name: Install npm
+      - name: Install composer
         if: steps.npm-cache.outputs.cache-hit != 'true'
         run: composer install --prefer-dist --no-progress
       - name: Run style check

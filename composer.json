@@ -1,9 +1,13 @@
 {
-    "name": "laravel/laravel",
+    "name": "forma-web/cyrille-backend",
     "type": "project",
-    "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
-    "license": "MIT",
+    "description": "Interactive e-book reader with audio, video, hyperlinks, and interactive images, supporting various formats and providing additional book information",
+    "keywords": [
+        "ebook",
+        "book",
+        "art"
+    ],
+    "license": "CC-BY-NC-ND-4.0",
     "require": {
         "php": "^8.1",
         "guzzlehttp/guzzle": "^7.2",

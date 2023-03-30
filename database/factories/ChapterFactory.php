@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Book;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -20,6 +21,7 @@ class ChapterFactory extends Factory
         $content_length = strlen(strip_tags($content));
 
         return [
+            'book_id' => Book::factory(),
             'order' => fake()->unique()->numberBetween(1, 100),
             'name' => fake()->sentence(),
             'content' => $content,
