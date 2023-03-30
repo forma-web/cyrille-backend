@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use App\Models\Book;
 use App\Models\Review;
 use App\Models\User;
-use Database\Seeders\ReviewSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
@@ -60,7 +59,7 @@ class ReviewsTest extends TestCase
         $response
             ->assertStatus(201)
             ->assertJson(
-                fn(AssertableJson $json) => $json
+                fn (AssertableJson $json) => $json
                     ->where('data.rating', 5)
                     ->where('data.comment', 'Test comment')
                     ->etc()
@@ -83,7 +82,7 @@ class ReviewsTest extends TestCase
         $response
             ->assertStatus(201)
             ->assertJson(
-                fn(AssertableJson $json) => $json
+                fn (AssertableJson $json) => $json
                     ->where('data.rating', 5)
                     ->missing('data.comment')
                     ->etc()
@@ -106,7 +105,7 @@ class ReviewsTest extends TestCase
         $response
             ->assertStatus(401)
             ->assertJsonStructure([
-                'message'
+                'message',
             ]);
     }
 }

@@ -5,9 +5,7 @@ namespace Tests\Feature;
 use App\Models\Book;
 use App\Models\Chapter;
 use App\Models\User;
-use Database\Seeders\ChapterSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 
 class ChaptersTest extends TestCase
@@ -16,8 +14,6 @@ class ChaptersTest extends TestCase
 
     /**
      * Test that authenticated user can view chapters
-     *
-     * @return void
      */
     public function test_user_can_view_chapters(): void
     {
@@ -37,15 +33,13 @@ class ChaptersTest extends TestCase
                         'id',
                         'order',
                         'name',
-                    ]
-                ]
+                    ],
+                ],
             ]);
     }
 
     /**
      * Test that authenticated user can view chapter
-     *
-     * @return void
      */
     public function test_user_can_view_chapter(): void
     {
@@ -67,14 +61,12 @@ class ChaptersTest extends TestCase
                     'content',
                     'content_length',
                     'language',
-                ]
+                ],
             ]);
     }
 
     /**
      * Test that unauthenticated user can't view chapters
-     *
-     * @return void
      */
     public function test_unauthenticated_user_cant_view_chapters(): void
     {
@@ -88,14 +80,12 @@ class ChaptersTest extends TestCase
         $response
             ->assertStatus(401)
             ->assertJsonStructure([
-                'message'
+                'message',
             ]);
     }
 
     /**
      * Test that unauthenticated user can't view chapter
-     *
-     * @return void
      */
     public function test_unauthenticated_user_cant_view_chapter(): void
     {
@@ -109,7 +99,7 @@ class ChaptersTest extends TestCase
         $response
             ->assertStatus(401)
             ->assertJsonStructure([
-                'message'
+                'message',
             ]);
     }
 }

@@ -54,7 +54,7 @@ class AuthenticationTest extends TestCase
         $response
             ->assertStatus(422)
             ->assertJsonStructure([
-                'message'
+                'message',
             ]);
 
         $this->assertGuest();
@@ -101,7 +101,7 @@ class AuthenticationTest extends TestCase
         $wrongPasswordResponse
             ->assertStatus(401)
             ->assertJsonStructure([
-                'message'
+                'message',
             ]);
 
         $this->assertGuest();
@@ -114,7 +114,7 @@ class AuthenticationTest extends TestCase
         $wrongEmailResponse
             ->assertStatus(422)
             ->assertJsonStructure([
-                'message'
+                'message',
             ]);
 
         $this->assertGuest();
