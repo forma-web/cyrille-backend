@@ -53,11 +53,9 @@ class AuthenticationTest extends TestCase
 
         $response
             ->assertStatus(422)
-            ->assertJson(
-                fn (AssertableJson $json) => $json
-                    ->has('message')
-                    ->etc()
-            );
+            ->assertJsonStructure([
+                'message'
+            ]);
 
         $this->assertGuest();
     }
@@ -102,11 +100,9 @@ class AuthenticationTest extends TestCase
 
         $wrongPasswordResponse
             ->assertStatus(401)
-            ->assertJson(
-                fn (AssertableJson $json) => $json
-                    ->has('message')
-                    ->etc()
-            );
+            ->assertJsonStructure([
+                'message'
+            ]);
 
         $this->assertGuest();
 
@@ -117,11 +113,9 @@ class AuthenticationTest extends TestCase
 
         $wrongEmailResponse
             ->assertStatus(422)
-            ->assertJson(
-                fn (AssertableJson $json) => $json
-                    ->has('message')
-                    ->etc()
-            );
+            ->assertJsonStructure([
+                'message'
+            ]);
 
         $this->assertGuest();
     }

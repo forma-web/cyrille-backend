@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use Database\Seeders\BookSeeder;
+use App\Models\Book;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -15,7 +15,7 @@ class BooksTest extends TestCase
      */
     public function test_books_can_be_listed()
     {
-        $this->seed(BookSeeder::class);
+        Book::factory()->count(10)->create();
 
         $response = $this->getJson(route('books.index'));
 
@@ -51,9 +51,9 @@ class BooksTest extends TestCase
      */
     public function test_a_book_can_be_shown()
     {
-        $this->seed(BookSeeder::class);
+        $book = Book::factory()->create();
 
-        $response = $this->getJson(route('books.show', 11));
+        $response = $this->getJson(route('books.show', $book->id));
 
         $response
             ->assertStatus(200)
