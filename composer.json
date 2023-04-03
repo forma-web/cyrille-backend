@@ -1,7 +1,6 @@
 {
     "name": "forma-web/cyrille-backend",
     "type": "project",
-    "version": "1.0.0",
     "description": "Interactive e-book reader with audio, video, hyperlinks, and interactive images, supporting various formats and providing additional book information",
     "keywords": [
         "ebook",
