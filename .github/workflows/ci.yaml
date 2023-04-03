@@ -101,7 +101,9 @@ jobs:
           username: ${{ secrets.STAGING_USERNAME }}
           key: ${{ secrets.STAGING_KEY }}
           script: |
-            docker service update cyrille_backend --image ${{ env.IMAGE_NAME }}
+            docker service update cyrille_backend --image ${{ env.IMAGE_NAME }} &&
+            docker container prune -f &&
+            docker image prune -a -f
 
   staging-deploy-notification:
     name: Telegram staging deploy notification

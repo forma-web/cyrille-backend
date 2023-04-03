@@ -40,7 +40,7 @@ x-unit-svc: &unit-svc
 
 services:
   laravel.test:
-    <<: *unit-svc
+    <<: *sail-svc
   pgsql:
     image: 'postgres:15'
     ports:
