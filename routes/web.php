@@ -14,8 +14,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    if (app()->isProduction())
+    if (app()->isProduction()) {
         return ['status' => 'ok'];
+    }
 
     $routes = [];
 
