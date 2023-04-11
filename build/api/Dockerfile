@@ -1,7 +1,7 @@
 ARG COMPOSER_VERSION=2.5.4
 ARG UNIT_VERSION=1.29.1-php8.1
 ARG PHP_VERSION=8.1-cli
-ARG NODE_VERSION=18.15.0-alpine3.17
+#ARG NODE_VERSION=18.15.0-alpine3.17
 
 FROM composer:${COMPOSER_VERSION} as composer_builder
 
@@ -12,18 +12,18 @@ COPY composer.lock .
 
 RUN composer install --optimize-autoloader --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
 
-FROM node:${NODE_VERSION} as node_builder
-
-WORKDIR /deps
-
-COPY package.json .
-COPY package-lock.json .
-COPY vite.config.ts .
-COPY postcss.config.js .
-COPY tailwind.config.js .
-COPY resources resources
-
-RUN npm ci && npm run build
+#FROM node:${NODE_VERSION} as node_builder
+#
+#WORKDIR /deps
+#
+#COPY package.json .
+#COPY package-lock.json .
+#COPY vite.config.ts .
+#COPY postcss.config.js .
+#COPY tailwind.config.js .
+#COPY resources resources
+#
+#RUN npm ci && npm run build
 
 FROM scratch as base
 
@@ -31,7 +31,7 @@ WORKDIR /app
 
 COPY . .
 COPY --from=composer_builder /deps/vendor vendor
-COPY --from=node_builder /deps/public/build public/build
+#COPY --from=node_builder /deps/public/build public/build
 
 FROM nginx/unit:${UNIT_VERSION} as api
 
