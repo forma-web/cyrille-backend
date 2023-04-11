@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\V1;
 
+use App\DTO\UserDTO;
 use App\Http\Requests\V1\UserLoginRequest;
 use App\Http\Requests\V1\UserRegisterRequest;
 use App\Http\Resources\V1\UserResource;
-use App\Models\User;
+use App\Services\V1\AuthService;
+use App\Services\V1\UserService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
@@ -14,17 +16,22 @@ use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 class AuthenticationController extends Controller
 {
+    public function __construct(
+        private readonly UserService $userService,
+        private readonly AuthService $authService,
+    ) {
+    }
+
     public function register(UserRegisterRequest $request): UserResource
     {
-        $credentials = $request->validated();
+        $userDTO = UserDTO::fromRequest($request);
 
-        $user = User::create($this->hashCredentialsPassword($credentials)->all());
+        $user = $this->userService->store($userDTO);
 
-        /** @var string $token */
-        $token = auth()->login($user); // @phpstan-ignore-line
+        $token = $this->authService->login($user);
 
-        return $this->current()->additional([
-            'meta' => $this->withToken($token),
+        return (new UserResource($user))->additional([
+            'meta' => $token->toArray(),
         ]);
     }
 

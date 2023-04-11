@@ -15,8 +15,8 @@ abstract class BaseFormRequest extends FormRequest
         return true;
     }
 
-    public function validated($key = null, $default = null): Collection
-    {
-        return collect(parent::validated($key, $default));
-    }
+//    public function validated($key = null, $default = null): Collection
+//    {
+//        return collect(parent::validated($key, $default));
+//    }
 }
