@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\V1;
 
-class StoreReviewRequest extends BaseFormRequest
+class StoreReviewRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
