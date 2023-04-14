@@ -29,9 +29,7 @@ final class AuthenticationController extends Controller
 
         $token = $this->authService->forceLogin($user);
 
-        event(new Registered($user));
-
-        return (new UserResource($user))->additional([
+        return UserResource::make($user)->additional([
             'meta' => $token->toArray(),
         ]);
     }
@@ -70,7 +68,7 @@ final class AuthenticationController extends Controller
 
     public function current(): UserResource
     {
-        return new UserResource(auth()->user());
+        return UserResource::make(auth()->user());
     }
 
     private function withToken(string $token): array
