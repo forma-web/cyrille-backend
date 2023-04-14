@@ -7,7 +7,7 @@ use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Hash;
 
-class UserService
+final class UserService
 {
     public function store(RegisterUserDTO $userDTO): User
     {

@@ -6,7 +6,7 @@ use App\DTO\V1\TokenDTO;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
-class AuthService
+final class AuthenticationService
 {
     public function forceLogin(User $user): TokenDTO
     {
