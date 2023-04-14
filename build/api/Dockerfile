@@ -1,5 +1,5 @@
 ARG COMPOSER_VERSION=2.5.4
-ARG UNIT_VERSION=1.29.1-php8.1
+ARG UNIT_VERSION=1.29.1-php8.2
 ARG PHP_VERSION=8.1-cli
 ARG NODE_VERSION=18.15.0-alpine3.17
 
@@ -33,7 +33,7 @@ COPY . .
 COPY --from=composer_builder /deps/vendor vendor
 COPY --from=node_builder /deps/public/build public/build
 
-FROM nginx/unit:${UNIT_VERSION} as api
+FROM unit:${UNIT_VERSION} as api
 
 ARG USER=backend
 ARG GROUP=backend
