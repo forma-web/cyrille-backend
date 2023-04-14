@@ -2,7 +2,7 @@
 
 namespace App\DTO\V1;
 
-final class TokenDTO extends DTO
+final readonly class TokenDTO extends DTO
 {
     public function __construct(
         public string $token,

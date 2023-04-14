@@ -4,7 +4,7 @@ namespace App\DTO\V1;
 
 use App\Http\Requests\V1\FormRequest;
 
-abstract class DTO
+abstract readonly class DTO
 {
     public function toArray(): array
     {
