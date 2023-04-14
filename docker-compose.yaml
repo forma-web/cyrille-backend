@@ -2,9 +2,9 @@ version: '3.9'
 
 x-sail-svc: &sail-svc
   build:
-    context: ./vendor/laravel/sail/runtimes/8.1
+    context: ./vendor/laravel/sail/runtimes/8.2
     dockerfile: Dockerfile
-  image: sail-8.1/app
+  image: sail-8.2/app
   extra_hosts:
     - 'host.docker.internal:host-gateway'
   ports:
@@ -20,6 +20,7 @@ x-sail-svc: &sail-svc
   networks:
     - sail
   depends_on:
+    - redis
     - pgsql
 
 x-unit-svc: &unit-svc
@@ -35,12 +36,16 @@ x-unit-svc: &unit-svc
   networks:
     - sail
   depends_on:
+    redis:
+      condition: service_healthy
     pgsql:
       condition: service_healthy
 
 services:
+
   laravel.test:
     <<: *sail-svc
+
   pgsql:
     image: 'postgres:15'
     ports:
@@ -66,6 +71,7 @@ services:
         - '${DB_USERNAME}'
       retries: 3
       timeout: 5s
+
   redis:
     image: 'redis:alpine'
     ports:
