@@ -1,8 +1,8 @@
 <?php
 
-namespace App\DTO;
+namespace App\DTO\V1;
 
-class TokenDTO extends DTO
+final class TokenDTO extends DTO
 {
     public function __construct(
         public string $token,

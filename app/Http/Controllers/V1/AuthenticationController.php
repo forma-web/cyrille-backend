@@ -2,19 +2,18 @@
 
 namespace App\Http\Controllers\V1;
 
-use App\DTO\UserDTO;
+use App\DTO\V1\RegisterUserDTO;
 use App\Http\Requests\V1\UserLoginRequest;
 use App\Http\Requests\V1\UserRegisterRequest;
 use App\Http\Resources\V1\UserResource;
 use App\Services\V1\AuthService;
 use App\Services\V1\UserService;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
-class AuthenticationController extends Controller
+final class AuthenticationController extends Controller
 {
     public function __construct(
         private readonly UserService $userService,
@@ -24,11 +23,13 @@ class AuthenticationController extends Controller
 
     public function register(UserRegisterRequest $request): UserResource
     {
-        $userDTO = UserDTO::fromRequest($request);
+        $user = $this->userService->store(
+            RegisterUserDTO::fromRequest($request),
+        );
 
-        $user = $this->userService->store($userDTO);
+        $token = $this->authService->forceLogin($user);
 
-        $token = $this->authService->login($user);
+        event(new Registered($user));
 
         return (new UserResource($user))->additional([
             'meta' => $token->toArray(),
@@ -55,18 +56,15 @@ class AuthenticationController extends Controller
 
     public function logout(): Response
     {
-        auth()->logout();
+        $this->authService->logout();
 
         return response()->noContent();
     }
 
     public function refresh(): JsonResponse
     {
-        /** @var string $token */
-        $token = auth()->refresh(true, true); // @phpstan-ignore-line
-
         return response()->json([
-            'meta' => $this->withToken($token),
+            'meta' => $this->authService->refresh(),
         ]);
     }
 
@@ -82,10 +80,5 @@ class AuthenticationController extends Controller
             'token_type' => 'bearer',
             'ttl' => auth()->factory()->getTTL() * 60, // @phpstan-ignore-line
         ];
-    }
-
-    private function hashCredentialsPassword(Collection $credentials): Collection
-    {
-        return $credentials->replaceByKey('password', fn ($p) => Hash::make($p));
     }
 }

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\DTO;
+namespace App\DTO\V1;
 
-use App\Http\Requests\V1\BaseFormRequest;
+use App\Http\Requests\V1\FormRequest;
 
 abstract class DTO
 {
@@ -11,7 +11,7 @@ abstract class DTO
         return get_object_vars($this);
     }
 
-    public static function fromRequest(BaseFormRequest $request): static
+    public static function fromRequest(FormRequest $request): static
     {
         return new static(...$request->validated());
     }

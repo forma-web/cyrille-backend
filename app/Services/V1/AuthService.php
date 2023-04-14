@@ -2,16 +2,33 @@
 
 namespace App\Services\V1;
 
-use App\DTO\TokenDTO;
+use App\DTO\V1\TokenDTO;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class AuthService
 {
-    public function login(User $user): TokenDTO
+    public function forceLogin(User $user): TokenDTO
     {
         $token = Auth::login($user);
 
+        return $this->tokenDTOFactory($token);
+    }
+
+    public function refresh(): TokenDTO
+    {
+        $token = Auth::refresh();
+
+        return $this->tokenDTOFactory($token);
+    }
+
+    public function logout(): void
+    {
+        Auth::logout();
+    }
+
+    private function tokenDTOFactory(string $token): TokenDTO
+    {
         return new TokenDTO(
             token: $token,
             token_type: 'bearer',
