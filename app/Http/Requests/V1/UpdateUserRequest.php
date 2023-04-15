@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\V1;
 
-class LoginUserRequest extends FormRequest
+class UpdateUserRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -12,8 +12,8 @@ class LoginUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'string', 'max:255', 'email'],
-            'password' => ['required', 'string'],
+            'name' => ['nullable', 'string', 'max:255'],
+            'email' => ['nullable', 'string', 'max:255', 'email', 'unique:users'],
         ];
     }
 }

@@ -11,7 +11,6 @@ use App\Services\V1\AuthenticationService;
 use App\Services\V1\UserService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
-use Throwable;
 
 final class AuthenticationController extends Controller
 {
@@ -40,7 +39,7 @@ final class AuthenticationController extends Controller
             LoginUserDTO::fromRequest($request),
         );
 
-        return UserResource::make($this->authService->current())->additional([
+        return UserResource::make($this->userService->current())->additional([
             'meta' => $token->toArray(),
         ]);
     }

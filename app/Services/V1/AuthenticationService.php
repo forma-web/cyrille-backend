@@ -5,7 +5,6 @@ namespace App\Services\V1;
 use App\DTO\V1\LoginUserDTO;
 use App\DTO\V1\TokenDTO;
 use App\Models\User;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -36,11 +35,6 @@ final class AuthenticationService
         $token = Auth::refresh();
 
         return $this->tokenDTOFactory($token);
-    }
-
-    public function current(): Authenticatable|null
-    {
-        return Auth::user();
     }
 
     public function logout(): void
