@@ -4,7 +4,7 @@ namespace App\Http\Requests\V1;
 
 use Illuminate\Validation\Rules\Password;
 
-class UserRegisterRequest extends FormRequest
+class RegisterUserRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.

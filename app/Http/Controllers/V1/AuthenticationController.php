@@ -2,25 +2,26 @@
 
 namespace App\Http\Controllers\V1;
 
+use App\DTO\V1\LoginUserDTO;
 use App\DTO\V1\RegisterUserDTO;
-use App\Http\Requests\V1\UserLoginRequest;
-use App\Http\Requests\V1\UserRegisterRequest;
+use App\Http\Requests\V1\LoginUserRequest;
+use App\Http\Requests\V1\RegisterUserRequest;
 use App\Http\Resources\V1\UserResource;
 use App\Services\V1\AuthenticationService;
 use App\Services\V1\UserService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
-use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
+use Throwable;
 
 final class AuthenticationController extends Controller
 {
     public function __construct(
-        private readonly UserService           $userService,
+        private readonly UserService $userService,
         private readonly AuthenticationService $authService,
     ) {
     }
 
-    public function register(UserRegisterRequest $request): UserResource
+    public function register(RegisterUserRequest $request): UserResource
     {
         $user = $this->userService->store(
             RegisterUserDTO::fromRequest($request),
@@ -33,22 +34,15 @@ final class AuthenticationController extends Controller
         ]);
     }
 
-    public function login(UserLoginRequest $request): UserResource
+    public function login(LoginUserRequest $request): UserResource
     {
-//        $credentials = $request->validated();
-//
-//        /** @var string|null $token */
-//        $token = auth()->attempt($credentials->all());
-//
-//        abort_if(
-//            ! $token,
-//            SymfonyResponse::HTTP_UNAUTHORIZED,
-//            __('auth.failed'),
-//        );
-//
-//        return $this->current()->additional([
-//            'meta' => $this->withToken($token),
-//        ]);
+        $token = $this->authService->login(
+            LoginUserDTO::fromRequest($request),
+        );
+
+        return UserResource::make($this->authService->current())->additional([
+            'meta' => $token->toArray(),
+        ]);
     }
 
     public function logout(): Response
