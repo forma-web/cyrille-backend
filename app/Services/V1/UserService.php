@@ -29,9 +29,27 @@ final class UserService
     {
         $user = User::findOrFail($userId);
 
+        // TODO: Use a DTO with mass assignment
+
+        if ($userDTO->name !== null) {
+            $user->name = $userDTO->name;
+        }
+
+        if ($userDTO->email !== null) {
+            $user->email = $userDTO->email;
+        }
+
+        $user->save();
+
+        return $user;
+    }
+
+    public function updatePassword(int $userId, string $password): User
+    {
+        $user = User::findOrFail($userId);
+
         $user->update([
-            'name' => $userDTO->name,
-            'email' => $userDTO->email,
+            'password' => Hash::make($password),
         ]);
 
         return $user;

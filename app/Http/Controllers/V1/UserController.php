@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\V1;
 
 use App\DTO\V1\UpdateUserDTO;
+use App\Http\Requests\V1\UpdateUserPasswordRequest;
 use App\Http\Requests\V1\UpdateUserRequest;
 use App\Http\Resources\V1\UserResource;
 use App\Services\V1\UserService;
+use Illuminate\Http\Response;
 
 final class UserController extends Controller
 {
@@ -19,6 +21,15 @@ final class UserController extends Controller
         return UserResource::make(
             $this->userService->update($userId, UpdateUserDTO::fromRequest($request))
         );
+    }
+
+    public function updatePassword(int $userId, UpdateUserPasswordRequest $request): Response
+    {
+        $password = $request->validated('password');
+
+        $this->userService->updatePassword($userId, $password);
+
+        return response()->noContent();
     }
 
     public function current(): UserResource

@@ -46,9 +46,11 @@ Route::controller(BookController::class)
     });
 
 Route::controller(UserController::class)
-    ->prefix('user')
+    ->prefix('users')
     ->as('user.')
     ->middleware('auth')
     ->group(function () {
         Route::get('', 'current')->name('current');
+        Route::patch('{user}', 'update')->name('update');
+        Route::patch('{user}/password', 'updatePassword')->name('updatePassword');
     });

@@ -18,7 +18,7 @@ class CheckCurrentPassword implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if (! Hash::check($value, Auth::user()->getAuthPassword())) {
-            $fail('validation.password.current');
+            $fail('validation.password.current')->translate();
         }
     }
 }
