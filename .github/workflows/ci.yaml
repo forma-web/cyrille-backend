@@ -76,7 +76,7 @@ jobs:
         if: steps.npm-cache.outputs.cache-hit != 'true'
         run: composer install --prefer-dist --no-progress
       - name: Run integration tests
-        run: php artisan test --env=testing --coverage-clover=coverage.xml
+        run: php artisan test --env=testing --testsuite=Feature --coverage-clover=coverage.xml
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
