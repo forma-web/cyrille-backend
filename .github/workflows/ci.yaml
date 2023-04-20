@@ -50,6 +50,7 @@ jobs:
       DB_PASSWORD: postgres
       JWT_ALGO: HS256
       JWT_SECRET: mSDWoIoGF4WViSm0EpDnRuw1CMezuEUax9bxTlZksSZYrR0YNdDQ9XUpLKdzsK3M
+      XDEBUG_MODE: coverage
     services:
       postgres:
         image: postgres:15
