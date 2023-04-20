@@ -79,11 +79,6 @@ jobs:
         run: php artisan test --env=testing --testsuite=Feature --coverage-clover=coverage.xml
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          file: ./coverage.xml
-          flags: integration
-          fail_ci_if_error: true
 
   build-and-push:
     if: github.ref == 'refs/heads/master' && github.event_name == 'push'
