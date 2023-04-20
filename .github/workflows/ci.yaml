@@ -35,11 +35,58 @@ jobs:
       - name: Run style check
         run: ${{ matrix.command }}
 
-  build-and-push:
+  integration-tests:
     if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-    name: Build and push
+    name: Integration tests
     runs-on: ubuntu-latest
     needs: code-quality
+    env:
+      APP_DEBUG: false
+      APP_ENV: testing
+      DB_CONNECTION: pgsql
+      DB_HOST: localhost
+      DB_PORT: 5432
+      DB_DATABASE: postgres
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        volumes:
+          - ./vendor/laravel/sail/database/pgsql/create-testing-database.sql:/docker-entrypoint-initdb.d/10-create-testing-database.sql
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+    steps:
+      - uses: actions/checkout@v3
+      - name: Validate composer.json and composer.lock
+        run: composer validate --strict
+      - uses: actions/cache@v3
+        id: composer-cache
+        with:
+        path: '**/vendor'
+        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+      - name: Install composer
+        if: steps.npm-cache.outputs.cache-hit != 'true'
+        run: composer install --prefer-dist --no-progress
+      - name: Run integration tests
+        run: php artisan test --env=testing --coverage-clover=coverage.xml
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage.xml
+          flags: integration
+          fail_ci_if_error: true
+
+  build-and-push:
+    name: Build and push
+    runs-on: ubuntu-latest
+    needs: integration-tests
     steps:
       - uses: actions/checkout@v3
       - name: Docker meta
@@ -68,23 +115,23 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  staging-notification:
-    name: Telegram staging notification
-    runs-on: ubuntu-latest
-    needs: build-and-push
-    steps:
-      - name: Notify
-        uses: appleboy/telegram-action@master
-        with:
-          to: ${{ secrets.TELEGRAM_TO }}
-          token: ${{ secrets.TELEGRAM_TOKEN }}
-          format: markdown
-          message: |
-            Repository: *${{ github.repository }}*
-            Branch: *${{ github.ref }}*
-            Initiator: *${{ github.actor }}*
-
-            Image ${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.tags }} is ready to be deployed to staging 👀
+#  staging-notification:
+#    name: Telegram staging notification
+#    runs-on: ubuntu-latest
+#    needs: build-and-push
+#    steps:
+#      - name: Notify
+#        uses: appleboy/telegram-action@master
+#        with:
+#          to: ${{ secrets.TELEGRAM_TO }}
+#          token: ${{ secrets.TELEGRAM_TOKEN }}
+#          format: markdown
+#          message: |
+#            Repository: *${{ github.repository }}*
+#            Branch: *${{ github.ref }}*
+#            Initiator: *${{ github.actor }}*
+#
+#            Image ${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.tags }} is ready to be deployed to staging 👀
 
   deploy-to-staging:
     name: Deploy to staging
@@ -105,23 +152,23 @@ jobs:
             docker container prune -f &&
             docker image prune -a -f
 
-  staging-deploy-notification:
-    name: Telegram staging deploy notification
-    runs-on: ubuntu-latest
-    needs: deploy-to-staging
-    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-    steps:
-      - name: Notify
-        uses: appleboy/telegram-action@master
-        with:
-          to: ${{ secrets.TELEGRAM_TO }}
-          token: ${{ secrets.TELEGRAM_TOKEN }}
-          format: markdown
-          message: |
-            Repository: *${{ github.repository }}*
-            Branch: *${{ github.ref }}*
-            Initiator: *${{ github.actor }}*
-
-            Image ${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.tags }} was ${{ job.status == 'success' && 'successfully' || 'unsuccessfully' }} deployed to staging ${{ job.status == 'success' && '🚀' || '🤯' }}
-
-            [Preview deployment](${{ env.STAGING_PREVIEW_URL }})
+#  staging-deploy-notification:
+#    name: Telegram staging deploy notification
+#    runs-on: ubuntu-latest
+#    needs: deploy-to-staging
+#    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+#    steps:
+#      - name: Notify
+#        uses: appleboy/telegram-action@master
+#        with:
+#          to: ${{ secrets.TELEGRAM_TO }}
+#          token: ${{ secrets.TELEGRAM_TOKEN }}
+#          format: markdown
+#          message: |
+#            Repository: *${{ github.repository }}*
+#            Branch: *${{ github.ref }}*
+#            Initiator: *${{ github.actor }}*
+#
+#            Image ${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.tags }} was ${{ job.status == 'success' && 'successfully' || 'unsuccessfully' }} deployed to staging ${{ job.status == 'success' && '🚀' || '🤯' }}
+#
+#            [Preview deployment](${{ env.STAGING_PREVIEW_URL }})
