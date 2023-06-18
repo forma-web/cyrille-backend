@@ -38,7 +38,6 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN php artisan route:cache && \
-    php artisan view:cache
+RUN php artisan route:cache
 
 EXPOSE 80
