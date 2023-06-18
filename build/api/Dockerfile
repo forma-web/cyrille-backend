@@ -1,7 +1,5 @@
 ARG COMPOSER_VERSION=2.5.4
-ARG UNIT_VERSION=1.29.1-php8.1
-ARG PHP_VERSION=8.1-cli
-ARG NODE_VERSION=18.15.0-alpine3.17
+ARG UNIT_VERSION=1.30.0-php8.2
 
 FROM composer:${COMPOSER_VERSION} as composer_builder
 
@@ -12,28 +10,7 @@ COPY composer.lock .
 
 RUN composer install --optimize-autoloader --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
 
-FROM node:${NODE_VERSION} as node_builder
-
-WORKDIR /deps
-
-COPY package.json .
-COPY package-lock.json .
-COPY vite.config.ts .
-COPY postcss.config.js .
-COPY tailwind.config.js .
-COPY resources resources
-
-RUN npm ci && npm run build
-
-FROM scratch as base
-
-WORKDIR /app
-
-COPY . .
-COPY --from=composer_builder /deps/vendor vendor
-COPY --from=node_builder /deps/public/build public/build
-
-FROM nginx/unit:${UNIT_VERSION} as api
+FROM unit:${UNIT_VERSION} as api
 
 ARG USER=backend
 ARG GROUP=backend
@@ -47,11 +24,11 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 WORKDIR /app
 
-# TODO: Change public folder permissions
-COPY --from=base --chown=${USER}:${GROUP} --chmod=777 /app .
+COPY --chown=${USER}:${GROUP} . .
+COPY --from=composer_builder --chown=${USER}:${GROUP} /deps/vendor vendor
 
-COPY --from=base /app/build/api/config.json /docker-entrypoint.d/config.json
-COPY --from=base /app/build/api/php.ini /etc/php.ini
+COPY build/api/config.json /docker-entrypoint.d/config.json
+COPY build/api/php.ini /etc/php.ini
 
 RUN apt-get update && \
     apt-get install -y libpq-dev && \
@@ -62,8 +39,6 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN php artisan route:cache && \
-    php artisan view:cache && \
-    php artisan optimize && \
-    php artisan config:clear # https://github.com/laravel/framework/issues/14941
+    php artisan view:cache
 
 EXPOSE 80
