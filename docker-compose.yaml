@@ -1,5 +1,6 @@
 version: '3.9'
 
+# framework default service
 x-sail-svc: &sail-svc
   build:
     context: vendor/laravel/sail/runtimes/8.2
@@ -7,8 +8,6 @@ x-sail-svc: &sail-svc
   image: sail-8.2/app
   extra_hosts:
     - 'host.docker.internal:host-gateway'
-  ports:
-    - '${APP_PORT:-80}:80'
   environment:
     WWWUSER: '${WWWUSER}'
     LARAVEL_SAIL: 1
@@ -16,32 +15,36 @@ x-sail-svc: &sail-svc
     XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
   volumes:
     - '.:/var/www/html'
-  networks:
-    - sail
-  depends_on:
-    - pgsql
 
+# production service
 x-unit-svc: &unit-svc
-  container_name: app
-  env_file:
-    - .env
+  image: cyrille/backend
   build:
     dockerfile: build/api/Dockerfile
     context: .
     target: api
-  ports:
-    - '80:80'
+  env_file:
+    - .env
   volumes:
     - '.:/app'
-  networks:
-    - sail
-  depends_on:
-    pgsql:
-      condition: service_healthy
 
 services:
-  laravel.test:
+  init:
     <<: *unit-svc
+    command: php artisan migrate:fresh --seed
+    networks:
+      - sail
+    depends_on:
+      pgsql:
+        condition: service_healthy
+  app:
+    <<: *unit-svc
+    ports:
+      - '${APP_PORT:-80}:80'
+    networks:
+      - sail
+    depends_on:
+      - init
   pgsql:
     image: 'postgres:15'
     ports:
