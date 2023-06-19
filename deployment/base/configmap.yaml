@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  APP_NAME: 'Cyrille'
+  APP_VERSION: '1.0.0'
+  LOG_CHANNEL: 'log'
+  LOG_DEPRECATIONS_CHANNEL: 'null'
+  LOG_LEVEL: 'error'
+  DB_CONNECTION: 'pgsql'
+  DB_HOST: 'database-service.cyrille.svc.cluster.local'
+  DB_PORT: '5432'
+  DB_DATABASE: 'cyrille'
+  JWT_ALGO: 'HS256'
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: database-config
+data:
+  POSTGRES_DB: 'cyrille'
+
