@@ -3,7 +3,7 @@ kind: Kustomization
 
 images:
   - name: robonen/cyrille-backend:latest
-    newTag: latest
+    newTag: v1.0.0
   - name: postgres
     newTag: '15'
 
