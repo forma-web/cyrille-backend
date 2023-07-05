@@ -32,7 +32,7 @@ class ReviewController extends Controller
      */
     public function store(int $bookId, StoreReviewRequest $request): ReviewResource
     {
-        $review = $request->validated();
+        $review = collect($request->validated());
 
         $review->put('user_id', auth()->id());
 
