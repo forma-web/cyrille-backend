@@ -18,6 +18,7 @@ class Otp extends Model
     protected $fillable = [
         'type',
         'code',
+        'sent_at',
         'expires_at',
     ];
 
@@ -35,7 +36,7 @@ class Otp extends Model
      */
     protected $casts = [
         'type' => OtpTypesEnum::class,
+        'sent_at' => 'datetime',
         'expires_at' => 'datetime',
-        'used_at' => 'datetime',
     ];
 }
