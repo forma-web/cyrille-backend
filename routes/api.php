@@ -17,6 +17,16 @@ Route::controller(AuthenticationController::class)
         Route::post('refresh', 'refresh')->name('refresh');
     });
 
+Route::controller(UserController::class)
+    ->middleware('auth')
+    ->prefix('users')
+    ->as('user.')
+    ->group(function () {
+        Route::get('', 'current')->name('current');
+        Route::patch('{user}', 'update')->name('update');
+        Route::patch('{user}/password', 'updatePassword')->name('updatePassword');
+    });
+
 Route::controller(BookController::class)
     ->prefix('books')
     ->as('books.')
@@ -43,14 +53,4 @@ Route::controller(BookController::class)
                 Route::get('', 'index')->name('index');
                 Route::get('{chapter}', 'show')->name('show');
             });
-    });
-
-Route::controller(UserController::class)
-    ->prefix('users')
-    ->as('user.')
-    ->middleware('auth')
-    ->group(function () {
-        Route::get('', 'current')->name('current');
-        Route::patch('{user}', 'update')->name('update');
-        Route::patch('{user}/password', 'updatePassword')->name('updatePassword');
     });
