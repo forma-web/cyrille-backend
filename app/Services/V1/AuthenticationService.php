@@ -14,7 +14,7 @@ final class AuthenticationService
     {
         $token = Auth::login($user);
 
-        return $this->tokenDTOFactory($token);
+        return TokenDTO::bearerFactory($token);
     }
 
     public function login(LoginUserDTO $credentials): TokenDTO
@@ -27,27 +27,18 @@ final class AuthenticationService
             __('auth.failed'),
         );
 
-        return $this->tokenDTOFactory($token);
+        return TokenDTO::bearerFactory($token);
     }
 
     public function refresh(): TokenDTO
     {
         $token = Auth::refresh();
 
-        return $this->tokenDTOFactory($token);
+        return TokenDTO::bearerFactory($token);
     }
 
     public function logout(): void
     {
         Auth::logout();
-    }
-
-    private function tokenDTOFactory(string $token): TokenDTO
-    {
-        return new TokenDTO(
-            token: $token,
-            token_type: 'bearer',
-            ttl: config('jwt.ttl') * 60,
-        );
     }
 }

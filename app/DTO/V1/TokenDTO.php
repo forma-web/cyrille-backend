@@ -10,4 +10,13 @@ final readonly class TokenDTO extends DTO
         public int $ttl,
     ) {
     }
+
+    public static function bearerFactory(string $token): self
+    {
+        return new self(
+            token: $token,
+            token_type: 'bearer',
+            ttl: config('jwt.ttl') * 60,
+        );
+    }
 }
