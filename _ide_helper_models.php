@@ -143,6 +143,7 @@ namespace App\Models{
  * @property string|null $comment
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Book $book
  * @property-read \App\Models\User $user
  * @method static \Database\Factories\ReviewFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Review newModelQuery()
