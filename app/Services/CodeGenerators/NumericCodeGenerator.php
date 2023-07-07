@@ -15,11 +15,13 @@ final readonly class NumericCodeGenerator implements CodeGenerator
 
     public function generate(int $length = 5): string
     {
-        if ($length < 1)
+        if ($length < 1) {
             throw new InvalidArgumentException('Length must be greater than 0.');
+        }
 
-        if ($length > 10)
+        if ($length > 10) {
             throw new InvalidArgumentException('Length must be less than 10.');
+        }
 
         $min = 10 ** ($length - 1);
         $max = 10 ** $length - 1;
