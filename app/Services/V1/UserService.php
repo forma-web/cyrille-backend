@@ -4,13 +4,13 @@ namespace App\Services\V1;
 
 use App\DTO\V1\RegisterUserDTO;
 use App\DTO\V1\UpdateUserDTO;
+use App\Events\Registered;
 use App\Models\User;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
-final class UserService
+final readonly class UserService
 {
     public function store(RegisterUserDTO $userDTO): User
     {
