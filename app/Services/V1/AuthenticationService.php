@@ -8,7 +8,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-final class AuthenticationService
+final readonly class AuthenticationService
 {
     public function forceLogin(User $user): TokenDTO
     {
