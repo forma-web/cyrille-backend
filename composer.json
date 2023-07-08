@@ -9,9 +9,9 @@
     ],
     "license": "CC-BY-NC-ND-4.0",
     "require": {
-        "php": "^8.1",
+        "php": "^8.2",
         "guzzlehttp/guzzle": "^7.2",
-        "laravel/framework": "^10.0",
+        "laravel/framework": "^10.10",
         "laravel/tinker": "^2.8",
         "php-open-source-saver/jwt-auth": "^2.1",
         "sentry/sentry-laravel": "^3.3"
@@ -24,8 +24,7 @@
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^7.0",
         "nunomaduro/larastan": "^2.0",
-        "phpunit/phpunit": "^10.0",
-        "spatie/laravel-ignition": "^2.0"
+        "phpunit/phpunit": "^10.1"
     },
     "autoload": {
         "psr-4": {

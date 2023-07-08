@@ -10,7 +10,6 @@ class ChapterController extends Controller
 {
     public function index(int $bookId): AnonymousResourceCollection
     {
-        // TODO: chapter tests
         return ChapterResource::collection(
             Book::query()
                 ->findOrFail($bookId)
@@ -34,7 +33,7 @@ class ChapterController extends Controller
      */
     public function show(int $bookId, int $chapterId): ChapterResource
     {
-        return new ChapterResource(
+        return ChapterResource::make(
             Book::query()
                 ->findOrFail($bookId)
                 ->chapters()

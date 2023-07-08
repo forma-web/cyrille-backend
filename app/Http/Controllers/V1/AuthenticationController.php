@@ -2,83 +2,86 @@
 
 namespace App\Http\Controllers\V1;
 
-use App\Http\Requests\V1\UserLoginRequest;
-use App\Http\Requests\V1\UserRegisterRequest;
+use App\DTO\V1\LoginUserDTO;
+use App\DTO\V1\RegisterUserDTO;
+use App\Http\Requests\V1\LoginUserRequest;
+use App\Http\Requests\V1\RegisterUserRequest;
 use App\Http\Resources\V1\UserResource;
-use App\Models\User;
+use App\Services\V1\AuthenticationService;
+use App\Services\V1\OtpService;
+use App\Services\V1\UserService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Hash;
-use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
-class AuthenticationController extends Controller
+final class AuthenticationController extends Controller
 {
-    public function register(UserRegisterRequest $request): UserResource
+    public function __construct(
+        private readonly UserService $userService,
+        private readonly AuthenticationService $authService,
+        private readonly OtpService $otpService,
+    ) {
+    }
+
+    public function register(RegisterUserRequest $request): UserResource
     {
-        $credentials = $request->validated();
+        $user = $this->userService->store(
+            RegisterUserDTO::fromRequest($request),
+        );
 
-        $user = User::create($this->hashCredentialsPassword($credentials)->all());
+        $token = $this->authService->forceLogin($user);
 
-        /** @var string $token */
-        $token = auth()->login($user); // @phpstan-ignore-line
-
-        return $this->current()->additional([
-            'meta' => $this->withToken($token),
+        return UserResource::make($user)->additional([
+            'meta' => $token->toArray(),
         ]);
     }
 
-    public function login(UserLoginRequest $request): UserResource
+    public function login(LoginUserRequest $request): UserResource
     {
-        $credentials = $request->validated();
-
-        /** @var string|null $token */
-        $token = auth()->attempt($credentials->all());
-
-        abort_if(
-            ! $token,
-            SymfonyResponse::HTTP_UNAUTHORIZED,
-            __('auth.failed'),
+        $token = $this->authService->login(
+            LoginUserDTO::fromRequest($request),
         );
 
-        return $this->current()->additional([
-            'meta' => $this->withToken($token),
+        return UserResource::make($this->userService->current())->additional([
+            'meta' => $token->toArray(),
         ]);
     }
 
     public function logout(): Response
     {
-        auth()->logout();
+        $this->authService->logout();
 
         return response()->noContent();
     }
 
     public function refresh(): JsonResponse
     {
-        /** @var string $token */
-        $token = auth()->refresh(true, true); // @phpstan-ignore-line
-
         return response()->json([
-            'meta' => $this->withToken($token),
+            'meta' => $this->authService->refresh(),
         ]);
     }
 
-    public function current(): UserResource
+    public function resetPassword(Request $request): void
     {
-        return new UserResource(auth()->user());
+        $request = $request->validate(
+            ['email' => 'required|email'],
+        );
+
+        $this->authService->resetPassword($request['email']);
     }
 
-    private function withToken(string $token): array
+    public function resetPasswordVerify(Request $request): void
     {
-        return [
-            'token' => $token,
-            'token_type' => 'bearer',
-            'ttl' => auth()->factory()->getTTL() * 60, // @phpstan-ignore-line
-        ];
-    }
+        $request = $request->validate([
+            'code' => 'required|string|size:5',
+            'email' => 'required|email',
+            'password' => 'required|string|min:8',
+        ]);
 
-    private function hashCredentialsPassword(Collection $credentials): Collection
-    {
-        return $credentials->replaceByKey('password', fn ($p) => Hash::make($p));
+        $this->authService->resetPasswordVerify(
+            $request['code'],
+            $request['email'],
+            $request['password'],
+        );
     }
 }

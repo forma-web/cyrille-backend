@@ -4,7 +4,7 @@ namespace App\Http\Requests\V1;
 
 use Illuminate\Validation\Rules\Password;
 
-class UserRegisterRequest extends BaseFormRequest
+class RegisterUserRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -15,8 +15,8 @@ class UserRegisterRequest extends BaseFormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'max:255', 'email', 'unique:users'],
-            'password' => ['required', Password::default()],
+            'email' => ['required', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'max:255', Password::default()],
         ];
     }
 }

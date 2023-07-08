@@ -33,7 +33,7 @@ class BookController extends Controller
      */
     public function show(int $id): BookResource
     {
-        return new BookResource(
+        return BookResource::make(
             Book::query()
                 ->withAvg('reviews', 'rating')
                 ->withCount('reviews')

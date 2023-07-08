@@ -2,14 +2,21 @@
 
 namespace App\Http\Controllers\V1;
 
+use App\DTO\V1\StoreReviewDTO;
 use App\Http\Requests\V1\StoreReviewRequest;
 use App\Http\Resources\V1\ReviewResource;
 use App\Models\Book;
+use App\Services\V1\ReviewService;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class ReviewController extends Controller
 {
     private const REVIEWS_PER_PAGE = 5;
+
+    public function __construct(
+        private readonly ReviewService $reviewService,
+    ) {
+    }
 
     /**
      * Display a listing of the resource.
@@ -32,15 +39,8 @@ class ReviewController extends Controller
      */
     public function store(int $bookId, StoreReviewRequest $request): ReviewResource
     {
-        $review = $request->validated();
-
-        $review->put('user_id', auth()->id());
-
-        return new ReviewResource(
-            Book::query()
-                ->findOrFail($bookId)
-                ->reviews()
-                ->create($review->all())
+        return ReviewResource::make(
+            $this->reviewService->store($bookId, StoreReviewDTO::fromRequest($request))
         );
     }
 

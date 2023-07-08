@@ -84,7 +84,7 @@ class ReviewsTest extends TestCase
             ->assertJson(
                 fn (AssertableJson $json) => $json
                     ->where('data.rating', 5)
-                    ->missing('data.comment')
+                    ->where('data.comment', null)
                     ->etc()
             );
     }
