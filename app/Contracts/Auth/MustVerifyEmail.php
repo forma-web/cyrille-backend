@@ -9,10 +9,10 @@ interface MustVerifyEmail
      */
     public function hasVerifiedEmail(): bool;
 
-    /**
-     * Mark the given user's email as verified.
-     */
-    public function markEmailAsVerified(): bool;
+    //    /**
+    //     * Mark the given user's email as verified.
+    //     */
+    //    public function markEmailAsVerified(): bool;
 
     /**
      * Send the email verification notification.

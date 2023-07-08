@@ -38,7 +38,6 @@ final class User extends Model implements AuthenticatableContract, AuthorizableC
      */
     protected $hidden = [
         'password',
-        'email_verified_at',
         'created_at',
         'updated_at',
     ];
@@ -48,9 +47,7 @@ final class User extends Model implements AuthenticatableContract, AuthorizableC
      *
      * @var array<string, string>
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+    protected $casts = [];
 
     public function getJWTIdentifier(): string
     {

@@ -2,10 +2,10 @@
 
 namespace App\Listeners;
 
+use App\Contracts\Auth\MustVerifyEmail;
 use App\Enums\OtpTypesEnum;
 use App\Events\Registered;
 use App\Services\V1\OtpService;
-use App\Contracts\Auth\MustVerifyEmail;
 
 final readonly class SendEmailVerificationNotification
 {

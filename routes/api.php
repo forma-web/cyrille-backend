@@ -15,6 +15,13 @@ Route::controller(AuthenticationController::class)
         Route::post('login', 'login')->name('login');
         Route::post('logout', 'logout')->name('logout');
         Route::post('refresh', 'refresh')->name('refresh');
+
+        Route::prefix('password')
+            ->as('password.')
+            ->group(function () {
+                Route::post('reset', 'resetPassword')->name('reset');
+                Route::post('verify', 'resetPasswordVerify')->name('verify');
+            });
     });
 
 Route::controller(UserController::class)
@@ -23,8 +30,9 @@ Route::controller(UserController::class)
     ->as('user.')
     ->group(function () {
         Route::get('', 'current')->name('current');
-        Route::patch('{user}', 'update')->name('update');
-        Route::patch('{user}/password', 'updatePassword')->name('updatePassword');
+        Route::patch('', 'update')->name('update');
+        Route::patch('password', 'updatePassword')->name('updatePassword');
+        Route::post('verify', 'verify')->name('verify');
     });
 
 Route::controller(BookController::class)

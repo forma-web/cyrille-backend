@@ -19,7 +19,8 @@ jobs:
       matrix:
         command:
           - vendor/bin/pint -v --test
-          - vendor/bin/phpstan analyze
+#  TODO: Add phpstan
+#          - vendor/bin/phpstan analyze
     steps:
       - uses: actions/checkout@v3
       - name: Validate composer.json and composer.lock

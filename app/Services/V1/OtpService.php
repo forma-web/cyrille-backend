@@ -33,18 +33,28 @@ final readonly class OtpService
 
     public function verify(User $user, OtpTypesEnum $type, string $code): bool
     {
-        return $user->otps()
-            ->where('type', $type->value)
+        $code = $user->otps()
             ->where('code', $code)
-            ->where('expires_at', '>=', now())
-            ->exists();
+            ->where('type', $type->value)
+            ->whereNull('verified_at')
+            ->whereTime('expires_at', '>=', now());
+
+        if (! $code->exists()) {
+            return false;
+        }
+
+        $code->update([
+            'verified_at' => now(),
+        ]);
+
+        return true;
     }
 
     private function hasActive(User $user, OtpTypesEnum $type): bool
     {
         return $user->otps()
             ->where('type', $type->value)
-            ->where('expires_at', '>', now())
+            ->whereTime('expires_at', '>', now())
             ->exists();
     }
 }

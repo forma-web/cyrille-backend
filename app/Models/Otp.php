@@ -43,6 +43,7 @@ final class Otp extends Model
      */
     protected $casts = [
         'type' => OtpTypesEnum::class,
+        'verified_at' => 'datetime',
         'sent_at' => 'datetime',
         'expires_at' => 'datetime',
     ];

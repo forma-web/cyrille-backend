@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Enums\OtpTypesEnum;
 use App\Notifications\VerifyEmailNotification;
 
 trait MustVerifyEmail
@@ -11,17 +12,10 @@ trait MustVerifyEmail
      */
     public function hasVerifiedEmail(): bool
     {
-        return ! is_null($this->email_verified_at);
-    }
-
-    /**
-     * Mark the given user's email as verified.
-     */
-    public function markEmailAsVerified(): bool
-    {
-        return $this->forceFill([
-            'email_verified_at' => $this->freshTimestamp(),
-        ])->save();
+        return $this->otps()
+            ->where('type', OtpTypesEnum::REGISTER)
+            ->whereNotNull('verified_at')
+            ->exists();
     }
 
     /**

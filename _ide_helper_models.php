@@ -140,6 +140,7 @@ namespace App\Models{
  * @property int $user_id
  * @property \App\Enums\OtpTypesEnum $type
  * @property string $code
+ * @property \Illuminate\Support\Carbon|null $verified_at
  * @property \Illuminate\Support\Carbon $sent_at
  * @property \Illuminate\Support\Carbon $expires_at
  * @method static \Illuminate\Database\Eloquent\Builder|Otp newModelQuery()
@@ -151,6 +152,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Otp whereSentAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Otp whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Otp whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Otp whereVerifiedAt($value)
  */
 	final class Otp extends \Eloquent {}
 }
@@ -189,9 +191,9 @@ namespace App\Models{
  * @property int $id
  * @property string $name
  * @property string $email
+ * @property string|null $email_for_verification
  * @property string $password
  * @property string|null $avatar
- * @property \Illuminate\Support\Carbon|null $email_verified_at
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
@@ -205,7 +207,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|User whereAvatar($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereEmailVerifiedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereEmailForVerification($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User wherePassword($value)
