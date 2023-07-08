@@ -45,6 +45,17 @@ x-unit-svc: &unit-svc
 
 services:
 
+#  init:
+#    <<: *unit-svc
+#    command: php artisan migrate:fresh --seed
+#    networks:
+#      - sail
+#    depends_on:
+#      pgsql:
+#        condition: service_healthy
+#      redis:
+#        condition: service_healthy
+
   laravel.test:
     <<: *sail-svc
 
