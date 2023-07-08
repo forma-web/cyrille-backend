@@ -17,18 +17,18 @@ final class UserController extends Controller
     ) {
     }
 
-    public function update(int $userId, UpdateUserRequest $request): UserResource
+    public function update(UpdateUserRequest $request): UserResource
     {
         return UserResource::make(
-            $this->userService->update($userId, UpdateUserDTO::fromRequest($request))
+            $this->userService->update(auth()->id(), UpdateUserDTO::fromRequest($request))
         );
     }
 
-    public function updatePassword(int $userId, UpdateUserPasswordRequest $request): Response
+    public function updatePassword(UpdateUserPasswordRequest $request): Response
     {
         $password = $request->validated('password');
 
-        $this->userService->updatePassword($userId, $password);
+        $this->userService->updatePassword(auth()->id(), $password);
 
         return response()->noContent();
     }
