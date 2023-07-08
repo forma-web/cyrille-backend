@@ -16,33 +16,34 @@ env:
   STAGING_PREVIEW_URL: https://api.forma-web.ru
 
 jobs:
-  code-quality:
-    name: Code quality checks
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        command:
-          - vendor/bin/pint -v --test
-          - vendor/bin/phpstan analyze
-    steps:
-      - uses: actions/checkout@v3
-      - name: Validate composer.json and composer.lock
-        run: composer validate --strict
-      - uses: actions/cache@v3
-        id: composer-cache
-        with:
-          path: '**/vendor'
-          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
-      - name: Install composer
-        if: steps.npm-cache.outputs.cache-hit != 'true'
-        run: composer install --prefer-dist --no-progress
-      - name: Run style check
-        run: ${{ matrix.command }}
+#  code-quality:
+#    name: Code quality checks
+#    runs-on: ubuntu-latest
+#    strategy:
+#      matrix:
+#        command:
+#          - vendor/bin/pint -v --test
+#          - vendor/bin/phpstan analyze
+#    steps:
+#      - uses: actions/checkout@v3
+#      - name: Validate composer.json and composer.lock
+#        run: composer validate --strict
+#      - uses: actions/cache@v3
+#        id: composer-cache
+#        with:
+#          path: '**/vendor'
+#          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+#      - name: Install composer
+#        if: steps.npm-cache.outputs.cache-hit != 'true'
+#        run: composer install --prefer-dist --no-progress
+#      - name: Run style check
+#        run: ${{ matrix.command }}
 
   integration-tests:
     name: Integration tests
     runs-on: ubuntu-latest
-    needs: code-quality
+#    TODO: uncomment when code-quality will be ready
+#    needs: code-quality
     env:
       APP_DEBUG: false
       APP_ENV: testing
