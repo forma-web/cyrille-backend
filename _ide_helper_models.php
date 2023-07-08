@@ -29,7 +29,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Artist whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Artist whereUpdatedAt($value)
  */
-	class Artist extends \Eloquent {}
+	final class Artist extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -54,7 +54,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|ArtistBook whereRole($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ArtistBook whereUpdatedAt($value)
  */
-	class ArtistBook extends \Eloquent {}
+	final class ArtistBook extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -99,7 +99,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Book whereThumbnailImage($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Book whereUpdatedAt($value)
  */
-	class Book extends \Eloquent {}
+	final class Book extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -129,7 +129,32 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Chapter whereOrder($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Chapter whereUpdatedAt($value)
  */
-	class Chapter extends \Eloquent {}
+	final class Chapter extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\Otp
+ *
+ * @property int $id
+ * @property int $user_id
+ * @property \App\Enums\OtpTypesEnum $type
+ * @property string $code
+ * @property \Illuminate\Support\Carbon|null $verified_at
+ * @property \Illuminate\Support\Carbon $sent_at
+ * @property \Illuminate\Support\Carbon $expires_at
+ * @method static \Illuminate\Database\Eloquent\Builder|Otp newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Otp newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Otp query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Otp whereCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Otp whereExpiresAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Otp whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Otp whereSentAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Otp whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Otp whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Otp whereVerifiedAt($value)
+ */
+	final class Otp extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -157,7 +182,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Review whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Review whereUserId($value)
  */
-	class Review extends \Eloquent {}
+	final class Review extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -167,12 +192,15 @@ namespace App\Models{
  * @property int $id
  * @property string $name
  * @property string $email
+ * @property string|null $email_for_verification
  * @property string $password
  * @property string|null $avatar
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Otp> $otps
+ * @property-read int|null $otps_count
  * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
@@ -180,11 +208,12 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|User whereAvatar($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereEmailForVerification($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User wherePassword($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
  */
-	class User extends \Eloquent implements \PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject {}
+	final class User extends \Eloquent implements \Illuminate\Contracts\Auth\Authenticatable, \Illuminate\Contracts\Auth\Access\Authorizable, \Illuminate\Contracts\Auth\CanResetPassword, \App\Contracts\Auth\MustVerifyEmail, \PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject {}
 }
 

@@ -2,14 +2,23 @@
 
 namespace App\Models;
 
+use App\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
+use App\Traits\MustVerifyEmail;
+use Illuminate\Auth\Authenticatable;
+use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Notifications\Notifiable;
-use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
+use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject as JWTSubjectContract;
 
-class User extends Authenticatable implements JWTSubject
+final class User extends Model implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract, MustVerifyEmailContract, JWTSubjectContract
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Authenticatable, Authorizable, CanResetPassword, MustVerifyEmail, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -28,9 +37,9 @@ class User extends Authenticatable implements JWTSubject
      * @var array<int, string>
      */
     protected $hidden = [
+        'password',
         'created_at',
         'updated_at',
-        'password',
     ];
 
     /**
@@ -48,5 +57,10 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims(): array
     {
         return [];
+    }
+
+    public function otps(): HasMany
+    {
+        return $this->hasMany(Otp::class);
     }
 }

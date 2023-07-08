@@ -4,13 +4,13 @@ namespace App\Services\V1;
 
 use App\DTO\V1\RegisterUserDTO;
 use App\DTO\V1\UpdateUserDTO;
+use App\Enums\OtpTypesEnum;
+use App\Events\Registered;
 use App\Models\User;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
-final class UserService
+final readonly class UserService
 {
     public function store(RegisterUserDTO $userDTO): User
     {
@@ -55,8 +55,18 @@ final class UserService
         return $user;
     }
 
-    public function current(): Authenticatable|null
+    public function current(): User
     {
-        return Auth::user();
+        /** @var $user User */
+        $user = Auth::user();
+
+        return $user;
+    }
+
+    public function verify(string $code): void
+    {
+        $valid = app(OtpService::class)->verify($this->current(), OtpTypesEnum::REGISTER, $code);
+
+        abort_if(! $valid, 403, __('auth.otp.invalid'));
     }
 }
