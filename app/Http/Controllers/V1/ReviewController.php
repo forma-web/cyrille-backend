@@ -40,7 +40,7 @@ class ReviewController extends Controller
     public function store(int $bookId, StoreReviewRequest $request): ReviewResource
     {
         return ReviewResource::make(
-            $this->reviewService->store($bookId,StoreReviewDTO::fromRequest($request))
+            $this->reviewService->store($bookId, StoreReviewDTO::fromRequest($request))
         );
     }
 
