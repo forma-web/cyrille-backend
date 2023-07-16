@@ -45,6 +45,13 @@ services:
       - sail
     depends_on:
       - init
+  worker:
+    <<: *sail-svc
+    command: php artisan queue:work
+    networks:
+      - sail
+    depends_on:
+      - laravel.test
   pgsql:
     image: 'postgres:15'
     ports:
