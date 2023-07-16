@@ -5,52 +5,72 @@ namespace App\Services\V1;
 use App\DTO\V1\RegisterUserDTO;
 use App\DTO\V1\UpdateUserDTO;
 use App\Enums\OtpTypesEnum;
-use App\Events\Registered;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 final readonly class UserService
 {
-    public function store(RegisterUserDTO $userDTO): User
-    {
-        $user = User::create([
-            'name' => $userDTO->name,
-            'email' => $userDTO->email,
-            'password' => Hash::make($userDTO->password),
-        ]);
-
-        event(new Registered($user));
-
-        return $user;
+    public function __construct(
+        private OtpService $otpService,
+    ) {
     }
 
-    public function update(int $userId, UpdateUserDTO $userDTO): User
+    public function store(RegisterUserDTO $userDTO): User|null
     {
-        $user = User::findOrFail($userId);
+        $user = User::firstWhere('email', $userDTO->email);
 
-        // TODO: Use a DTO with mass assignment
+        if ($user === null) {
+            $user = User::create([
+                'name' => $userDTO->name,
+                'email' => $userDTO->email,
+                'password' => Hash::make($userDTO->password),
+            ]);
+
+            $this->otpService->issue($user, OtpTypesEnum::REGISTER);
+
+            return $user;
+        }
+
+        if (! $this->otpService->has($user, OtpTypesEnum::REGISTER)) {
+            $user->update([
+                'name' => $userDTO->name,
+                'password' => Hash::make($userDTO->password),
+            ]);
+
+            $this->otpService->issue($user, OtpTypesEnum::REGISTER);
+
+            return $user;
+        }
+
+        return null;
+    }
+
+    public function check(string $code): bool
+    {
+        return $this->otpService->verifyAndUse($this->current(), $code, OtpTypesEnum::REGISTER);
+    }
+
+    public function update(UpdateUserDTO $userDTO): User
+    {
+        $user = $this->current();
 
         if ($userDTO->name !== null) {
             $user->name = $userDTO->name;
         }
 
-        if ($userDTO->email !== null) {
+        if (
+            $userDTO->email !== null &&
+            $this->otpService->use($user, OtpTypesEnum::CHANGE_EMAIL)
+        ) {
             $user->email = $userDTO->email;
         }
 
+        if ($userDTO->password !== null) {
+            $user->password = Hash::make($userDTO->password);
+        }
+
         $user->save();
-
-        return $user;
-    }
-
-    public function updatePassword(int $userId, string $password): User
-    {
-        $user = User::findOrFail($userId);
-
-        $user->update([
-            'password' => Hash::make($password),
-        ]);
 
         return $user;
     }
@@ -63,10 +83,13 @@ final readonly class UserService
         return $user;
     }
 
-    public function verify(string $code): void
+    public function emailVerify(): void
     {
-        $valid = app(OtpService::class)->verify($this->current(), OtpTypesEnum::REGISTER, $code);
+        $this->otpService->issue($this->current(), OtpTypesEnum::CHANGE_EMAIL);
+    }
 
-        abort_if(! $valid, 403, __('auth.otp.invalid'));
+    public function emailCheck(string $code): bool
+    {
+        return $this->otpService->verify($this->current(), $code, OtpTypesEnum::CHANGE_EMAIL);
     }
 }

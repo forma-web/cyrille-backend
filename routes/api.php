@@ -11,16 +11,23 @@ Route::controller(AuthenticationController::class)
     ->prefix('auth')
     ->as('auth.')
     ->group(function () {
-        Route::post('register', 'register')->name('register');
         Route::post('login', 'login')->name('login');
         Route::post('logout', 'logout')->name('logout');
         Route::post('refresh', 'refresh')->name('refresh');
+        Route::post('register', 'register')
+            ->name('register')
+            ->middleware('throttle:1,0.2');
+        Route::post('check', 'check')->name('check');
 
         Route::prefix('password')
             ->as('password.')
+            ->middleware('guest')
             ->group(function () {
-                Route::post('reset', 'resetPassword')->name('reset');
-                Route::post('verify', 'resetPasswordVerify')->name('verify');
+                Route::post('verify', 'passwordVerify')
+                    ->name('verify')
+                    ->middleware('throttle:1,0.2');
+                Route::post('check', 'passwordCheck')->name('check');
+                Route::post('reset', 'passwordReset')->name('reset');
             });
     });
 
@@ -31,8 +38,15 @@ Route::controller(UserController::class)
     ->group(function () {
         Route::get('', 'current')->name('current');
         Route::patch('', 'update')->name('update');
-        Route::patch('password', 'updatePassword')->name('updatePassword');
-        Route::post('verify', 'verify')->name('verify');
+
+        Route::prefix('email')
+            ->as('email.')
+            ->group(function () {
+                Route::post('verify', 'emailVerify')
+                    ->name('verify')
+                    ->middleware('throttle:1,0.2');
+                Route::post('check', 'emailCheck')->name('check');
+            });
     });
 
 Route::controller(BookController::class)

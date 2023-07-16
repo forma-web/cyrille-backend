@@ -4,22 +4,24 @@ namespace App\Http\Controllers\V1;
 
 use App\DTO\V1\LoginUserDTO;
 use App\DTO\V1\RegisterUserDTO;
+use App\Http\Requests\V1\CheckRequest;
 use App\Http\Requests\V1\LoginUserRequest;
+use App\Http\Requests\V1\PasswordCheckRequest;
+use App\Http\Requests\V1\PasswordResetRequest;
+use App\Http\Requests\V1\PasswordVerifyRequest;
 use App\Http\Requests\V1\RegisterUserRequest;
 use App\Http\Resources\V1\UserResource;
 use App\Services\V1\AuthenticationService;
-use App\Services\V1\OtpService;
 use App\Services\V1\UserService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 final class AuthenticationController extends Controller
 {
     public function __construct(
         private readonly UserService $userService,
         private readonly AuthenticationService $authService,
-        private readonly OtpService $otpService,
     ) {
     }
 
@@ -29,11 +31,30 @@ final class AuthenticationController extends Controller
             RegisterUserDTO::fromRequest($request),
         );
 
+        abort_if(
+            ! $user,
+            SymfonyResponse::HTTP_UNPROCESSABLE_ENTITY,
+            __('auth.exists'),
+        );
+
         $token = $this->authService->forceLogin($user);
 
         return UserResource::make($user)->additional([
             'meta' => $token->toArray(),
         ]);
+    }
+
+    public function check(CheckRequest $request): Response
+    {
+        $code = $request->validated('code');
+
+        abort_if(
+            ! $this->userService->check($code),
+            SymfonyResponse::HTTP_UNAUTHORIZED,
+            __('auth.otp.invalid')
+        );
+
+        return response()->noContent();
     }
 
     public function login(LoginUserRequest $request): UserResource
@@ -61,27 +82,40 @@ final class AuthenticationController extends Controller
         ]);
     }
 
-    public function resetPassword(Request $request): void
+    public function passwordVerify(PasswordVerifyRequest $request): Response
     {
-        $request = $request->validate(
-            ['email' => 'required|email'],
-        );
+        $email = $request->validated('email');
 
-        $this->authService->resetPassword($request['email']);
+        $this->authService->passwordVerify($email);
+
+        return response()->noContent();
     }
 
-    public function resetPasswordVerify(Request $request): void
+    public function passwordCheck(PasswordCheckRequest $request): Response
     {
-        $request = $request->validate([
-            'code' => 'required|string|size:5',
-            'email' => 'required|email',
-            'password' => 'required|string|min:8',
-        ]);
+        $email = $request->validated('email');
+        $code = $request->validated('code');
 
-        $this->authService->resetPasswordVerify(
-            $request['code'],
-            $request['email'],
-            $request['password'],
+        abort_if(
+            ! $this->authService->passwordCheck($email, $code),
+            SymfonyResponse::HTTP_UNAUTHORIZED,
+            __('auth.otp.invalid'),
         );
+
+        return response()->noContent();
+    }
+
+    public function passwordReset(PasswordResetRequest $request): Response
+    {
+        $email = $request->validated('email');
+        $password = $request->validated('password');
+
+        abort_if(
+            ! $this->authService->passwordReset($email, $password),
+            SymfonyResponse::HTTP_UNAUTHORIZED,
+            __('auth.otp.invalid'),
+        );
+
+        return response()->noContent();
     }
 }
