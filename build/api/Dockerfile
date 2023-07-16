@@ -32,6 +32,8 @@ COPY build/api/php.ini /etc/php.ini
 
 RUN apt-get update && \
     apt-get install -y libpq-dev && \
+    pecl install redis && \
+    docker-php-ext-enable redis && \
     docker-php-ext-install pgsql pdo_pgsql opcache && \
     apt-get --purge -y remove gcc make && \
     apt-get -y autoremove && \
