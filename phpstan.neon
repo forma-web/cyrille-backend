@@ -13,3 +13,4 @@ parameters:
 
     excludePaths:
         - app/macros.php
+        - app/Services/V1

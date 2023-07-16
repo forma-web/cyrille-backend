@@ -13,7 +13,7 @@ final readonly class NumericCodeGenerator implements CodeGenerator
     ) {
     }
 
-    public function generate(int $length = 5): string
+    public function generate(?int $length = 5): string
     {
         if ($length < 1) {
             throw new InvalidArgumentException('Length must be greater than 0.');
@@ -26,6 +26,6 @@ final readonly class NumericCodeGenerator implements CodeGenerator
         $min = 10 ** ($length - 1);
         $max = 10 ** $length - 1;
 
-        return $this->randomizer->getInt($min, $max);
+        return strval($this->randomizer->getInt($min, $max));
     }
 }

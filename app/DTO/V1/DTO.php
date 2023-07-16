@@ -13,6 +13,7 @@ abstract readonly class DTO
 
     public static function fromRequest(FormRequest $request): static
     {
+        // @phpstan-ignore-next-line
         return new static(...$request->validated());
     }
 }

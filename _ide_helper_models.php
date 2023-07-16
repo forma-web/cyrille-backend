@@ -140,6 +140,7 @@ namespace App\Models{
  * @property int $user_id
  * @property \App\Enums\OtpTypesEnum $type
  * @property string $code
+ * @property \Illuminate\Support\Carbon|null $used_at
  * @property \Illuminate\Support\Carbon|null $verified_at
  * @property \Illuminate\Support\Carbon $sent_at
  * @property \Illuminate\Support\Carbon $expires_at
@@ -151,6 +152,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Otp whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Otp whereSentAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Otp whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Otp whereUsedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Otp whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Otp whereVerifiedAt($value)
  */
@@ -192,7 +194,6 @@ namespace App\Models{
  * @property int $id
  * @property string $name
  * @property string $email
- * @property string|null $email_for_verification
  * @property string $password
  * @property string|null $avatar
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -208,7 +209,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|User whereAvatar($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereEmailForVerification($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User wherePassword($value)

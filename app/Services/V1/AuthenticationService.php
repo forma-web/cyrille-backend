@@ -6,11 +6,17 @@ use App\DTO\V1\LoginUserDTO;
 use App\DTO\V1\TokenDTO;
 use App\Enums\OtpTypesEnum;
 use App\Models\User;
+use Hash;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
-use Symfony\Component\HttpFoundation\Response;
 
 final readonly class AuthenticationService
 {
+    public function __construct(
+        private OtpService $otpService,
+    ) {
+    }
+
     public function forceLogin(User $user): TokenDTO
     {
         $token = Auth::login($user);
@@ -43,35 +49,44 @@ final readonly class AuthenticationService
         Auth::logout();
     }
 
-    public function resetPassword(string $email): void
+    public function passwordVerify(string $email): void
     {
         $user = User::firstWhere('email', $email);
 
         if ($user) {
-            $otp = app(OtpService::class)->issue($user, OtpTypesEnum::RESET_PASSWORD);
-
-            if ($otp) {
-                $user->sendEmailVerificationNotification($otp->code);
-            }
+            $this->otpService->issue($user, OtpTypesEnum::RESET_PASSWORD);
         }
     }
 
-    public function resetPasswordVerify(string $code, string $email, string $password): void
+    public function passwordCheck(string $email, string $code): bool
     {
         $user = User::firstWhere('email', $email);
 
-        if ($user) {
-            $otp = app(OtpService::class)->verify($user, OtpTypesEnum::RESET_PASSWORD, $code);
-
-            if ($otp) {
-                $user->update([
-                    'password' => \Hash::make($password),
-                ]);
-
-                return;
-            }
+        if (
+            $user !== null &&
+            $this->otpService->verify($user, $code, OtpTypesEnum::RESET_PASSWORD)
+        ) {
+            return true;
         }
 
-        abort(Response::HTTP_UNAUTHORIZED);
+        return false;
+    }
+
+    public function passwordReset(string $email, string $password): bool
+    {
+        $user = User::firstWhere('email', $email);
+
+        if (
+            $user !== null &&
+            $this->otpService->use($user, OtpTypesEnum::RESET_PASSWORD)
+        ) {
+            $user->update([
+                'password' => Hash::make($password),
+            ]);
+
+            return true;
+        }
+
+        return false;
     }
 }
