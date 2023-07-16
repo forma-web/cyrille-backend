@@ -22,6 +22,7 @@ return new class extends Migration
                 ->cascadeOnDelete();
             $table->enum('type', OtpTypesEnum::values());
             $table->string('code', 10);
+            $table->timestamp('used_at')->nullable();
             $table->timestamp('verified_at')->nullable();
             $table->timestamp('sent_at');
             $table->timestamp('expires_at');
