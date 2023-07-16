@@ -5,7 +5,7 @@ namespace App\Enums;
 trait Arrayable
 {
     /**
-     * @return array<string, mixed>
+     * @return array<int, string>
      */
     public static function values(): array
     {
