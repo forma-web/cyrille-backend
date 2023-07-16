@@ -3,9 +3,11 @@ kind: Kustomization
 
 images:
   - name: robonen/cyrille-backend:latest
-    newTag: v1.0.0
+    newTag: v1.1.0
   - name: postgres
     newTag: '15'
+  - name: redis
+    newTag: '6.2.13'
 
 namespace: cyrille
 
@@ -14,6 +16,8 @@ resources:
   - 'secret.yaml'
   - 'configmap.yaml'
   - 'database-deployment.yaml'
+  - 'cache-deployment.yaml'
   - 'app-deployment.yaml'
   - 'database-service.yaml'
+  - 'cache-service.yaml'
   - 'app-service.yaml'

@@ -4,7 +4,7 @@ metadata:
   name: app-config
 data:
   APP_NAME: 'Cyrille'
-  APP_VERSION: '1.0.0'
+  APP_VERSION: '1.1.0'
   LOG_CHANNEL: 'log'
   LOG_DEPRECATIONS_CHANNEL: 'null'
   LOG_LEVEL: 'error'
@@ -12,6 +12,10 @@ data:
   DB_HOST: 'database-service.cyrille.svc.cluster.local'
   DB_PORT: '5432'
   DB_DATABASE: 'cyrille'
+  CACHE_DRIVER: 'redis'
+  QUEUE_CONNECTION: 'redis'
+  REDIS_HOST: 'redis-service.cyrille.svc.cluster.local'
+  REDIS_PORT: '6379'
   JWT_ALGO: 'HS256'
 
 ---
