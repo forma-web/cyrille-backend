@@ -56,6 +56,7 @@ final class Book extends Model
             ->belongsToMany(Artist::class, ArtistBook::class)
             ->withPivot('role', 'notes')
             ->orderByPivot('role')
+            ->withTimestamps()
             ->as('project');
     }
 
@@ -67,6 +68,7 @@ final class Book extends Model
         return $this
             ->belongsToMany(Artist::class, ArtistBook::class)
             ->wherePivot('role', 'author')
+            ->withTimestamps()
             ->as('authors');
     }
 
