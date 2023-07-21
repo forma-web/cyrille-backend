@@ -5,6 +5,8 @@ x-sail-svc: &sail-svc
   build:
     context: vendor/laravel/sail/runtimes/8.2
     dockerfile: Dockerfile
+    args:
+      WWWGROUP: '${WWWGROUP}'
   image: sail-8.2/app
   extra_hosts:
     - 'host.docker.internal:host-gateway'
@@ -80,6 +82,8 @@ services:
       - sail
     healthcheck:
       test: ['CMD', 'redis-cli', 'ping']
+      retries: 3
+      timeout: 5s
 
 networks:
   sail:
