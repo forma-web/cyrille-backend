@@ -36,9 +36,8 @@ final class VerifyEmailNotification extends Notification
     {
         return (new MailMessage)
             ->subject('Verify Email Address')
-            ->line("Hello {$notifiable->name},")
-            ->line('Use the following code to verify your email address:')
-            ->line($this->code)
+            ->line("Hello {$notifiable->name}, use the code below to verify action:")
+            ->line("**{$this->code}**")
             ->line('Thank you for using our application!');
     }
 
