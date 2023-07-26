@@ -20,8 +20,8 @@ Route::controller(AuthenticationController::class)
         Route::post('check', 'check')->name('check');
 
         Route::prefix('password')
-            ->as('password.')
             ->middleware('guest')
+            ->as('password.')
             ->group(function () {
                 Route::post('verify', 'passwordVerify')
                     ->name('verify')
@@ -32,7 +32,7 @@ Route::controller(AuthenticationController::class)
     });
 
 Route::controller(UserController::class)
-    ->middleware('auth')
+    ->middleware(['auth', 'verified'])
     ->prefix('users')
     ->as('user.')
     ->group(function () {
@@ -62,13 +62,13 @@ Route::controller(BookController::class)
             ->group(function () {
                 Route::get('', 'index')->name('index');
 
-                Route::middleware('auth')->group(function () {
+                Route::middleware(['auth', 'verified'])->group(function () {
                     Route::post('', 'store')->name('store');
                 });
             });
 
         Route::controller(ChapterController::class)
-            ->middleware('auth')
+            ->middleware(['auth', 'verified'])
             ->prefix('{book}/chapters')
             ->as('chapters.')
             ->group(function () {
