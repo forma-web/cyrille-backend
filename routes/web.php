@@ -19,7 +19,3 @@ Route::get('/', function () {
         'version' => config('app.version'),
     ];
 });
-
-Route::get('loaderio-fae53a2a2584211a78ac1318994b17fa', function () {
-    return 'loaderio-fae53a2a2584211a78ac1318994b17fa';
-});
