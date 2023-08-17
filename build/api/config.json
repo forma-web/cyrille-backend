@@ -24,6 +24,11 @@
             "script": "index.php",
             "user": "backend",
             "group": "backend",
+            "processes": {
+                "max": 10,
+                "spare": 5,
+                "idle_timeout": 20
+            },
             "options": {
                 "file": "/etc/php.ini"
             }
