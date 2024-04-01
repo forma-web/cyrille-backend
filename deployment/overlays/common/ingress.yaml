@@ -6,7 +6,7 @@ metadata:
     kubernetes.io/ingress.class: 'nginx'
 spec:
   rules:
-    - host: robonen.dacdevops.ru
+    - host: api.cyrille.ru
       http:
         paths:
           - pathType: Prefix
@@ -18,5 +18,5 @@ spec:
                   name: web
   tls:
     - hosts:
-        - robonen.dacdevops.ru
-      secretName: robonen-certificate
+        - api.cyrille.ru
+      secretName: cyrille-certificate
