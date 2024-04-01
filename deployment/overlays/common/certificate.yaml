@@ -1,11 +1,11 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: argocd-robonen-ceritifcate
+  name: argocd-cyrille-ceritifcate
 spec:
   dnsNames:
-    - robonen.dacdevops.ru
+    - api.cyrille.ru
   issuerRef:
     kind: ClusterIssuer
     name: yc-clusterissuer
-  secretName: robonen-certificate
+  secretName: cyrille-certificate
